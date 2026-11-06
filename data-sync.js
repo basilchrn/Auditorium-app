@@ -130,7 +130,7 @@ const DataStore = {
 
   // HTTP GET: Fetch live data from Google Sheet Web App
   async fetchFromSheets() {
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("YOUR_APPS_SCRIPT_WEB_APP_URL")) {
+    if (!APPS_SCRIPT_URL) {
       return {
         success: false,
         isConfigured: false,
@@ -241,7 +241,7 @@ const DataStore = {
 
   // HTTP POST: Send data to Google Sheet Web App
   async postToSheets(action, payload) {
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("YOUR_APPS_SCRIPT_WEB_APP_URL")) {
+    if (!APPS_SCRIPT_URL) {
       console.warn("Apps Script URL not set. Action saved locally only.");
       return { status: "success", message: "Saved locally (Offline Mode)" };
     }
