@@ -9,6 +9,7 @@
 // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL HERE:
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOFVSn5oEva5wGU_asCXGhQu3PoO82OnyP3Ogh9HKZ2Px65dD42Wyqdw90pJa2tQ0MSw/exec";
 
+
 // Optional API Secret Key for header/query verification
 const API_SECRET = "";
 
