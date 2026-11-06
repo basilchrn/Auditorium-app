@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
+  <title>Auditorium & Venue Management System</title>
+  <style>
+    /* ZERO EXTERNAL DEPENDENCIES - STANDALONE SYSTEM CSS */
+    :root {
+      --bg-main: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #1e293b;
+      --bg-card-subtle: #334155;
+      --border-color: #334155;
+      --border-focus: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent-gold: #fbbf24;
+      --accent-gold-bg: rgba(251, 191, 36, 0.12);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --danger: #f43f5e;
+      --danger-bg: rgba(244, 63, 94, 0.12);
+      --hold: #f59e0b;
+      --hold-bg: rgba(245, 158, 11, 0.15);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 84px; /* Space for mobile bottom bar */
+      overflow-x: hidden;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header */
+    header {
+      background-color: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: var(--radius-full);
+      background-color: var(--primary);
+      color: #0f172a;
+      text-transform: uppercase;
+    }
+
+    .role-switcher {
+      display: inline-flex;
+      background: var(--bg-card-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      border: 1px solid var(--border-color);
+    }
+
+    .role-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .role-btn.active {
+      background: var(--primary);
+      color: #0f172a;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-group-header {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      min-height: 38px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #0f172a;
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-gold {
+      background-color: var(--accent-gold);
+      color: #0f172a;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card-subtle);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      border-color: rgba(244, 63, 94, 0.3);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.55rem;
+      font-size: 0.72rem;
+      min-height: 28px;
+    }
+
+    /* KPI Banner */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (min-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-top: 0.25rem;
+    }
+
+    /* Section Headers */
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    /* Calendar & Slot Matrix */
+    .calendar-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cal-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cal-date-picker-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cal-date-picker-wrap input[type="date"] {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.4rem 0.65rem;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .slot-legend {
+      display: flex;
+      gap: 0.85rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: var(--radius-full);
+      display: inline-block;
+    }
+    .dot-avail { background: var(--success); }
+    .dot-hold { background: var(--hold); }
+    .dot-booked { background: var(--danger); }
+
+    /* Visual Matrix Grid */
+    .matrix-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0.5rem;
+      margin-top: 0.5rem;
+      overflow-x: auto;
+      display: block;
+    }
+
+    @media (min-width: 640px) {
+      .matrix-table {
+        display: table;
+      }
+    }
+
+    .matrix-th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 0.5rem;
+      font-weight: 700;
+    }
+
+    .matrix-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      min-width: 170px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .matrix-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .matrix-card.is-available {
+      border-left: 4px solid var(--success);
+    }
+
+    .matrix-card.is-hold {
+      border-left: 4px solid var(--hold);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .matrix-card.is-booked {
+      border-left: 4px solid var(--danger);
+      background: rgba(244, 63, 94, 0.05);
+    }
+
+    .slot-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+    }
+
+    .badge-morn { background: #0284c7; color: #fff; }
+    .badge-eve { background: #6366f1; color: #fff; }
+
+    /* Spaces Grid */
+    .spaces-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .spaces-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      }
+    }
+
+    .venue-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .venue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+
+    .venue-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .venue-group-tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-family: monospace;
+    }
+
+    .venue-info {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .venue-conflict-warning {
+      font-size: 0.7rem;
+      color: var(--accent-gold);
+      background: var(--accent-gold-bg);
+      padding: 0.4rem 0.6rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Modal Sheet (Responsive iOS/Android Bottom Sheet + Desktop Modal) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      background: var(--bg-surface);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    @media (min-width: 640px) {
+      .modal-overlay {
+        align-items: center;
+        padding: 1rem;
+      }
+      .modal-sheet {
+        border-radius: var(--radius-lg);
+        border-bottom: 1px solid var(--border-color);
+        transform: translateY(20px);
+        max-height: 85vh;
+      }
+    }
+
+    .modal-overlay.open .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--text-dim);
+      border-radius: var(--radius-full);
+      margin: -0.5rem auto 0.75rem auto;
+      display: block;
+    }
+
+    @media (min-width: 640px) {
+      .sheet-handle { display: none; }
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-head h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    /* Forms */
+    .form-section {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .form-section-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.65rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      margin-bottom: 0.65rem;
+    }
+
+    @media (min-width: 520px) {
+      .form-row-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .form-row-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    input, select, textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 0.5rem 0.65rem;
+      font-size: 0.82rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* Toggle switches */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed var(--border-color);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 22px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--bg-card-subtle);
+      transition: .25s;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(16px); }
+
+    /* Ledger Summary Box */
+    .ledger-box {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.78rem;
+    }
+
+    .ledger-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.2rem 0;
+      color: var(--text-muted);
+    }
+
+    .ledger-line.total {
+      border-top: 1px solid var(--border-color);
+      margin-top: 0.4rem;
+      padding-top: 0.4rem;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .ledger-line.advance {
+      color: var(--accent-gold);
+      font-weight: 700;
+    }
+
+    /* ID Proof Preview Dropzone */
+    .id-proof-card {
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      text-align: center;
+      background: var(--bg-card);
+    }
+
+    .id-preview-img {
+      width: 100%;
+      max-height: 140px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-top: 0.5rem;
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    /* Table */
+    .table-responsive {
+      overflow-x: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    th {
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+    }
+
+    td {
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(30, 41, 59, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0.25rem;
+      z-index: 40;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.15rem;
+    }
+
+    /* Custom Notification Banner */
+    .toast-banner {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--primary);
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-size: 0.8rem;
+      display: none;
+      z-index: 60;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast-banner">Notification message</div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner container">
+      <div class="brand-title">
+        <span>🏛️ VenueCore</span>
+        <span class="brand-badge">Auditorium Pro</span>
+      </div>
+
+      <!-- ROLE SELECTOR -->
+      <div class="role-switcher">
+        <button type="button" class="role-btn active" onclick="setRole('admin', this)">Admin</button>
+        <button type="button" class="role-btn" onclick="setRole('desk', this)">Booking Desk</button>
+        <button type="button" class="role-btn" onclick="setRole('customer', this)">Customer</button>
+      </div>
+
+      <div class="btn-group-header">
+        <button type="button" class="btn btn-outline btn-sm" onclick="exportDataJSON()" title="Export JSON backup">
+          💾 Backup
+        </button>
+        <button type="button" class="btn btn-gold btn-sm" id="topBookBtn" onclick="openNewBookingModal()">
+          + New Booking
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN BODY -->
+  <main class="container">
+    
+    <!-- KPI STATS (Admin & Desk) -->
+    <div class="kpi-grid" id="kpiSection">
+      <div class="kpi-card">
+        <div class="kpi-label">Active Spaces</div>
+        <div class="kpi-value" id="kpiSpaces">--</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Bookings</div>
+        <div class="kpi-value" id="kpiBookings">--</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Holds</div>
+        <div class="kpi-value" style="color:var(--hold);" id="kpiHolds">--</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Collected Advance</div>
+        <div class="kpi-value" style="color:var(--success);" id="kpiAdvance">₹0</div>
+      </div>
+    </div>
+
+    <!-- CALENDAR & SLOT MATRIX SECTION -->
+    <section class="calendar-container" id="calendarSection">
+      <div class="cal-controls">
+        <div class="cal-date-picker-wrap">
+          <label for="matrixDate" style="color:var(--primary); font-size:0.8rem; font-weight:800;">Target Date:</label>
+          <input type="date" id="matrixDate" onchange="renderSlotMatrix()">
+        </div>
+        
+        <div class="slot-legend">
+          <span class="legend-item"><span class="dot dot-avail"></span> Available</span>
+          <span class="legend-item"><span class="dot dot-hold"></span> Tentative Hold</span>
+          <span class="legend-item"><span class="dot dot-booked"></span> Confirmed</span>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <h2>Live Slot Availability Matrix</h2>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Slots: Morn (10-16) & Eve (17-22)</span>
+      </div>
+
+      <div class="matrix-table" id="matrixGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- SPACES & VENUES REPOSITORY -->
+    <section style="margin-bottom: 2rem;" id="spacesSection">
+      <div class="section-title">
+        <div>
+          <h2>Managed Spaces & Conflict Groups</h2>
+          <p style="font-size:0.72rem; color:var(--text-muted);">Acoustic Mutual Exclusion Rules: Spaces in the same conflict group cannot run concurrently.</p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="addVenueBtn" onclick="openAddSpaceModal()">
+          ➕ Add New Venue
+        </button>
+      </div>
+
+      <div class="spaces-grid" id="spacesGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- BOOKINGS & TRANSACTION LEDGER -->
+    <section class="calendar-container" id="ledgerSection">
+      <div class="section-title">
+        <div>
+          <h2>Bookings & Payment Audit Ledger</h2>
+          <p style="font-size:0.72rem; color:var(--text-muted);">Track customer KYC, advance tokens, cash/UPI UTR numbers, and hold expirations.</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Venue Space</th>
+              <th>Customer</th>
+              <th>Dates & Slot</th>
+              <th>Status</th>
+              <th>Total (₹)</th>
+              <th>Advance</th>
+              <th>Due</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTableBody">
+            <!-- Injected via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-nav">
+    <button type="button" class="nav-btn active" onclick="scrollToElement('calendarSection')">
+      <span class="nav-icon">📅</span>
+      <span>Matrix</span>
+    </button>
+    <button type="button" class="nav-btn" onclick="scrollToElement('spacesSection')">
+      <span class="nav-icon">🏛️</span>
+      <span>Venues</span>
+    </button>
+    <button type="button" class="nav-btn" onclick="openNewBookingModal()">
+      <span class="nav-icon">➕</span>
+      <span>Book</span>
+    </button>
+    <button type="button" class="nav-btn" onclick="scrollToElement('ledgerSection')">
+      <span class="nav-icon">📑</span>
+      <span>Ledger</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: NEW BOOKING RESERVATION -->
+  <div id="bookingModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <div>
+          <h3 id="bookingModalTitle">New Venue Reservation</h3>
+          <p style="font-size:0.7rem; color:var(--text-muted);">Conflict checks & dynamic rate evaluation</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeModal('bookingModal')">&times;</button>
+      </div>
+
+      <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+        
+        <!-- STEP 1: Space & Slot Selection -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span>1. Space & Slot Allocation</span>
+            <span id="conflictNotice" style="font-size:0.65rem; color:var(--danger); display:none;">⚠️ Mutual Exclusion Conflict</span>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="bookSpaceSelect">Select Space</label>
+              <select id="bookSpaceSelect" onchange="onSpaceOrDateChange()" required></select>
+            </div>
+            <div class="form-group">
+              <label for="bookPackageSelect">Slot Package</label>
+              <select id="bookPackageSelect" onchange="onSlotPackageChange()" required>
+                <!-- Populated dynamically based on space rules -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="bookStartDate">Start Date</label>
+              <input type="date" id="bookStartDate" onchange="onSpaceOrDateChange()" required>
+            </div>
+            <div class="form-group">
+              <label for="bookGuestPax">Expected Pax</label>
+              <input type="number" id="bookGuestPax" min="1" value="100" oninput="recalcLedger()" required>
+            </div>
+          </div>
+          
+          <div id="paxSurchargeNotice" style="display:none; font-size:0.7rem; color:var(--accent-gold); margin-top:2px;">
+            ⚠️ Exceeds space capacity. Surcharge of ₹200/extra pax applied.
+          </div>
+        </div>
+
+        <!-- STEP 2: Add-Ons (Parking, Waste Disposal, Caution & Tax) -->
+        <div class="form-section">
+          <div class="form-section-title">2. Add-Ons & Statutory Controls</div>
+          
+          <!-- Parking Area -->
+          <div class="toggle-row">
+            <div>
+              <label style="color:var(--text-main);">Parking Area Reservation</label>
+              <div style="font-size:0.65rem; color:var(--text-muted);">Rate: Max(₹4,000, ₹200 × sqft) per slot</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="parkingToggle" onchange="toggleParkingInput()">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div id="parkingInputWrap" style="display:none; margin:0.5rem 0;" class="form-group">
+            <label for="parkingSqft">Parking Area in SqFt</label>
+            <input type="number" id="parkingSqft" placeholder="e.g. 50" min="0" oninput="recalcLedger()">
+          </div>
+
+          <!-- Waste Disposal Toggle -->
+          <div class="toggle-row">
+            <div>
+              <label style="color:var(--text-main);">Waste Disposal Fee (+₹1,000)</label>
+              <div style="font-size:0.65rem; color:var(--text-muted);">Cleaning and sanitation levy</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="wasteToggle" onchange="recalcLedger()" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Caution Deposit Toggle -->
+          <div class="toggle-row">
+            <div>
+              <label style="color:var(--text-main);">Refundable Caution Deposit (₹10,000)</label>
+              <div id="cautionInfoText" style="font-size:0.65rem; color:var(--text-muted);">Only applicable for Full Venue</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="cautionToggle" onchange="recalcLedger()" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- GST Toggle -->
+          <div class="toggle-row">
+            <div>
+              <label style="color:var(--text-main);">Include GST (18%)</label>
+              <div style="font-size:0.65rem; color:var(--text-muted);">Commercial premises SAC tax</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="gstToggle" onchange="recalcLedger()">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- STEP 3: Tenant KYC & Physical ID Upload -->
+        <div class="form-section">
+          <div class="form-section-title">3. Tenant Demographics & ID Proof</div>
+          
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="tName">Full Name *</label>
+              <input type="text" id="tName" placeholder="Tenant Name" required>
+            </div>
+            <div class="form-group">
+              <label for="tPhone">Primary Phone *</label>
+              <input type="tel" id="tPhone" placeholder="10-digit mobile" required>
+            </div>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="tAltPhone">Alternate Phone</label>
+              <input type="tel" id="tAltPhone" placeholder="Optional">
+            </div>
+            <div class="form-group">
+              <label for="tPurpose">Event Purpose</label>
+              <select id="tPurpose">
+                <option value="Wedding / Reception">Wedding / Reception</option>
+                <option value="Cultural / Music Show">Cultural / Music Show</option>
+                <option value="Corporate / Conference">Corporate / Conference</option>
+                <option value="Exhibition / Expo">Exhibition / Expo</option>
+                <option value="Birthday / Family Gathering">Birthday / Family Gathering</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="tOrg">Organization / Company</label>
+              <input type="text" id="tOrg" placeholder="Optional">
+            </div>
+            <div class="form-group">
+              <label for="tSuggestedBy">Suggested By (Referral)</label>
+              <input type="text" id="tSuggestedBy" placeholder="Staff or referral name">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0.65rem;">
+            <label for="tRemarks">Special Remarks</label>
+            <input type="text" id="tRemarks" placeholder="Stage requirements, sound check, generator...">
+          </div>
+
+          <!-- Mandatory ID Upload with Offline Generator -->
+          <div class="id-proof-card">
+            <label style="color:var(--text-main); font-weight:700; display:block; margin-bottom:0.25rem;">
+              Mandatory Govt ID Proof *
+            </label>
+            <p style="font-size:0.65rem; color:var(--text-muted); margin-bottom:0.5rem;">
+              Capture photo or upload valid physical ID (Voter/DL/Passport)
+            </p>
+            <div style="display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
+              <input type="file" id="idProofFile" accept="image/*" capture="environment" onchange="handleIdProofFile(event)">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="generateStandaloneTestId()">
+                Generate Sample ID
+              </button>
+            </div>
+            <img id="idImagePreview" src="" alt="ID Preview" class="id-preview-img">
+            <input type="hidden" id="idProofBase64" required>
+          </div>
+        </div>
+
+        <!-- STEP 4: Payment Logging & Financial Summary -->
+        <div class="form-section">
+          <div class="form-section-title">4. Financial Breakdown & Token Advance</div>
+
+          <div class="ledger-box">
+            <div class="ledger-line"><span>Venue Base Charge:</span><b id="leadVenueBase">₹0</b></div>
+            <div class="ledger-line" id="lineExtraPax" style="display:none; color:var(--accent-gold);"><span>Extra Pax Surcharge:</span><b id="leadExtraPax">₹0</b></div>
+            <div class="ledger-line" id="lineParking" style="display:none;"><span>Parking Area Levy:</span><b id="leadParking">₹0</b></div>
+            <div class="ledger-line" id="lineWaste"><span>Waste Disposal:</span><b id="leadWaste">₹0</b></div>
+            <div class="ledger-line" id="lineGst" style="display:none;"><span>GST (18%):</span><b id="leadGst">₹0</b></div>
+            <div class="ledger-line" id="lineCaution"><span>Caution Deposit:</span><b id="leadCaution">₹0</b></div>
+            <div class="ledger-line total"><span>Grand Total:</span><span id="leadGrandTotal" style="color:var(--primary);">₹0</span></div>
+            <div class="ledger-line advance"><span>Advance Required (<span id="leadAdvancePct">50</span>%):</span><span id="leadAdvanceReq">₹0</span></div>
+          </div>
+
+          <div class="form-row form-row-2" style="margin-top:0.75rem;">
+            <div class="form-group">
+              <label for="payMode">Payment Mode</label>
+              <select id="payMode" onchange="togglePayFields()">
+                <option value="UPI">UPI</option>
+                <option value="Cash">Cash</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="payAmount">Advance Paid Now (₹) *</label>
+              <input type="number" id="payAmount" min="0" placeholder="0" required>
+            </div>
+          </div>
+
+          <!-- UPI Details -->
+          <div id="upiFields" class="form-row form-row-2">
+            <div class="form-group">
+              <label for="upiPayerName">UPI Payer Name</label>
+              <input type="text" id="upiPayerName" placeholder="e.g. Rahul Sharma">
+            </div>
+            <div class="form-group">
+              <label for="upiVpa">UPI ID / Address</label>
+              <input type="text" id="upiVpa" placeholder="user@okaxis">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="upiUtr">UPI Transaction / UTR Ref</label>
+              <input type="text" id="upiUtr" placeholder="12-digit Bank Reference">
+            </div>
+          </div>
+
+          <!-- Booking Hold Option -->
+          <div class="form-group" style="margin-top:0.5rem;">
+            <label for="bookStatusSelect">Booking Status</label>
+            <select id="bookStatusSelect">
+              <option value="Confirmed">Confirmed (Advance Received)</option>
+              <option value="Tentative_Hold">Tentative Hold (Expires automatically)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBookingBtn" class="btn btn-gold" style="width:100%; font-size:0.95rem; padding:0.75rem;">
+          ✓ Authorize & Save Reservation
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD NEW VENUE / EXPANSION -->
+  <div id="addSpaceModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <div>
+          <h3>➕ Add New Venue Space</h3>
+          <p style="font-size:0.7rem; color:var(--text-muted);">Expand premises without code modification</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeModal('addSpaceModal')">&times;</button>
+      </div>
+
+      <form onsubmit="handleCreateSpace(event)">
+        <div class="form-section">
+          <div class="form-group" style="margin-bottom:0.65rem;">
+            <label for="newSpaceName">Venue Name *</label>
+            <input type="text" id="newSpaceName" placeholder="e.g. Open Lawn / Rooftop Banquet" required>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="newSpaceCapacity">Guest Capacity (Pax) *</label>
+              <input type="number" id="newSpaceCapacity" min="10" placeholder="e.g. 250" required>
+            </div>
+            <div class="form-group">
+              <label for="newSpaceRate">Rate per Slot (₹) *</label>
+              <input type="number" id="newSpaceRate" min="500" placeholder="e.g. 12000" required>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0.65rem;">
+            <label for="newSpaceConflictGroup">Conflict Group ID *</label>
+            <input type="text" id="newSpaceConflictGroup" placeholder="e.g. GRP_OPEN_LAWN" required>
+            <span style="font-size:0.65rem; color:var(--text-muted);">
+              Use <b>GRP_MAIN_AUDITORIUM</b> if it cannot run when the main auditorium runs. Use a new ID (e.g., GRP_LAWN) if independent.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="newSpaceDesc">Description & Highlights</label>
+            <input type="text" id="newSpaceDesc" placeholder="e.g. Independent entrance, acoustic soundproof setup">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;">Create Space</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: TENANT INSPECTION & SETTLEMENT DRAWER -->
+  <div id="tenantInspectModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <div>
+          <h3 id="inspectTitle">Reservation Details</h3>
+          <p style="font-size:0.7rem; color:var(--text-muted);">Inspection, settlement & discretionary refund</p>
+        </div>
+        <button type="button" class="close-btn" onclick="closeModal('tenantInspectModal')">&times;</button>
+      </div>
+
+      <div id="inspectBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CORE (ZERO DEPENDENCIES) -->
+  <script>
+    /**
+     * AUDITORIUM & VENUE MANAGEMENT SYSTEM
+     * Standalone Vanilla JS Engine — Zero external CDN reliance.
+     */
+
+    // LOCAL STORAGE KEYS
+    const STORAGE_KEY_SPACES = "AUDITORIUM_SPACES_V1";
+    const STORAGE_KEY_BOOKINGS = "AUDITORIUM_BOOKINGS_V1";
+    const STORAGE_KEY_CONFIG = "AUDITORIUM_CONFIG_V1";
+
+    // CURRENT ROLE STATE: 'admin' | 'desk' | 'customer'
+    let currentRole = 'admin';
+
+    // DEFAULT DYNAMIC PRICING CONFIG (Editable & expandable via Sheet / Settings)
+    const DEFAULT_CONFIG = {
+      RATE_FULL_MORN: 15000,
+      RATE_FULL_EVE: 15000,
+      RATE_FULL_SAME_DAY_BOTH: 40000,
+      RATE_FULL_EVE_NEXT_MORN: 25000,
+      RATE_FULL_TWO_MORNINGS: 35000,
+      RATE_FULL_TWO_EVENINGS: 35000,
+      RATE_TOP_PER_SLOT: 5000,
+      PARKING_MIN_FEE: 4000,
+      PARKING_PER_SQFT: 200,
+      WASTE_DISPOSAL_FEE: 1000,
+      CAUTION_DEPOSIT_FULL: 10000,
+      CAUTION_DEPOSIT_TOP: 0,
+      ADVANCE_PCT_FULL: 50,
+      ADVANCE_PCT_TOP: 100,
+      HOLD_HOURS_FULL: 48,
+      HOLD_HOURS_TOP: 24,
+      GST_PERCENT: 18,
+      EXTRA_PAX_SURCHARGE_PER_HEAD: 200
+    };
+
+    // DEFAULT SPACES PRE-SEED (Can be fully modified, added or removed)
+    const DEFAULT_SPACES = [
+      {
+        space_id: "SP-MAIN-FULL",
+        name: "Full Auditorium (Ground + Top Floor)",
+        capacity: 500,
+        conflict_group: "GRP_MAIN_AUDITORIUM",
+        is_composite: true,
+        base_rate: 15000,
+        description: "Complete venue with 500 Pax capacity. Locks Top Floor automatically."
+      },
+      {
+        space_id: "SP-TOP-SOLO",
+        name: "First / Top Floor Only",
+        capacity: 100,
+        conflict_group: "GRP_MAIN_AUDITORIUM",
+        is_composite: false,
+        base_rate: 5000,
+        description: "Mini space with 100 Pax. No combined package. Locks Full Venue automatically."
+      },
+      {
+        space_id: "SP-PARKING-ONLY",
+        name: "Parking Area (Standalone Event)",
+        capacity: 300,
+        conflict_group: "GRP_PARKING_STANDALONE",
+        is_composite: false,
+        base_rate: 4000,
+        description: "Open paved parking area for outdoor expos, flea markets or food stalls."
+      }
+    ];
+
+    // IN-MEMORY DATABASE STATE
+    let db = {
+      config: { ...DEFAULT_CONFIG },
+      spaces: [],
+      bookings: []
+    };
+
+    // INITIALIZATION
+    window.addEventListener("DOMContentLoaded", () => {
+      loadLocalData();
+
+      // Set target date in matrix to today
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("matrixDate").value = today;
+      document.getElementById("bookStartDate").value = today;
+
+      populateSpaceDropdown();
+      renderApp();
+    });
+
+    function loadLocalData() {
+      try {
+        const savedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
+        db.config = savedConfig ? JSON.parse(savedConfig) : { ...DEFAULT_CONFIG };
+
+        const savedSpaces = localStorage.getItem(STORAGE_KEY_SPACES);
+        db.spaces = savedSpaces ? JSON.parse(savedSpaces) : [ ...DEFAULT_SPACES ];
+
+        const savedBookings = localStorage.getItem(STORAGE_KEY_BOOKINGS);
+        db.bookings = savedBookings ? JSON.parse(savedBookings) : [];
+      } catch (e) {
+        console.error("Local data load failed:", e);
+        db.config = { ...DEFAULT_CONFIG };
+        db.spaces = [ ...DEFAULT_SPACES ];
+        db.bookings = [];
+      }
+    }
+
+    function saveLocalData() {
+      try {
+        localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(db.config));
+        localStorage.setItem(STORAGE_KEY_SPACES, JSON.stringify(db.spaces));
+        localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(db.bookings));
+      } catch (e) {
+        console.error("Local data save failed:", e);
+      }
+    }
+
+    // ROLE SWITCHER
+    function setRole(role, btnElement) {
+      currentRole = role;
+      document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("active"));
+      btnElement.classList.add("active");
+
+      // UI adjust by role
+      const isCustomer = role === 'customer';
+      const isAdmin = role === 'admin';
+
+      document.getElementById("kpiSection").style.display = isCustomer ? "none" : "grid";
+      document.getElementById("addVenueBtn").style.display = isAdmin ? "inline-flex" : "none";
+      document.getElementById("topBookBtn").innerText = isCustomer ? "Request Hold" : "+ New Booking";
+      document.getElementById("ledgerSection").style.display = isCustomer ? "none" : "block";
+
+      showToast(`Switched to ${role.toUpperCase()} mode.`);
+      renderApp();
+    }
+
+    // POPULATE SPACES DROPDOWN
+    function populateSpaceDropdown() {
+      const select = document.getElementById("bookSpaceSelect");
+      select.innerHTML = db.spaces.map(s => `
+        <option value="${s.space_id}">${s.name} (Cap: ${s.capacity} pax)</option>
+      `).join("");
+
+      onSpaceOrDateChange();
+    }
+
+    // MAIN RENDER FUNCTION
+    function renderApp() {
+      renderKPIs();
+      renderSlotMatrix();
+      renderSpacesList();
+      renderBookingsTable();
+    }
+
+    // RENDER KPI STATS
+    function renderKPIs() {
+      document.getElementById("kpiSpaces").innerText = db.spaces.length;
+      document.getElementById("kpiBookings").innerText = db.bookings.length;
+
+      const holds = db.bookings.filter(b => b.status === "Tentative_Hold").length;
+      document.getElementById("kpiHolds").innerText = holds;
+
+      const totalAdvance = db.bookings.reduce((sum, b) => sum + Number(b.advance_paid || 0), 0);
+      document.getElementById("kpiAdvance").innerText = `₹${totalAdvance.toLocaleString()}`;
+    }
+
+    // LIVE SLOT MATRIX RENDERER
+    function renderSlotMatrix() {
+      const targetDate = document.getElementById("matrixDate").value;
+      const grid = document.getElementById("matrixGrid");
+
+      if (!targetDate) return;
+
+      const slots = [
+        { code: "MORN", name: "Morning (10:00 - 16:00)" },
+        { code: "EVE", name: "Evening (17:00 - 22:00)" }
+      ];
+
+      let html = `
+        <div style="display:grid; grid-template-columns: 180px repeat(2, 1fr); gap:0.5rem; align-items:center;">
+          <div class="matrix-th">Venue Space</div>
+          <div class="matrix-th">Morning Slot (10-16h)</div>
+          <div class="matrix-th">Evening Slot (17-22h)</div>
+        </div>
+      `;
+
+      db.spaces.forEach(space => {
+        html += `
+          <div style="display:grid; grid-template-columns: 180px repeat(2, 1fr); gap:0.5rem; margin-top:0.5rem; align-items:stretch;">
+            <div style="background:var(--bg-surface); padding:0.75rem; border-radius:var(--radius-md); border:1px solid var(--border-color); display:flex; flex-direction:column; justify-content:center;">
+              <strong style="font-size:0.85rem;">${space.name}</strong>
+              <span style="font-size:0.68rem; color:var(--text-muted);">${space.capacity} Pax • Group: ${space.conflict_group}</span>
+            </div>
+        `;
+
+        slots.forEach(slot => {
+          const statusObj = getSlotStatus(space, targetDate, slot.code);
+          const isAvail = statusObj.status === "Available";
+          const isHold = statusObj.status === "Tentative_Hold";
+          const isBooked = statusObj.status === "Confirmed";
+
+          let cardClass = "is-available";
+          let badgeText = "Available";
+          if (isHold) { cardClass = "is-hold"; badgeText = "Hold"; }
+          if (isBooked) { cardClass = "is-booked"; badgeText = "Booked"; }
+
+          html += `
+            <div class="matrix-card ${cardClass}" onclick="handleSlotCardClick('${space.space_id}', '${targetDate}', '${slot.code}', '${statusObj.status}', '${statusObj.bookingId || ''}')">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                <span class="slot-badge ${slot.code === 'MORN' ? 'badge-morn' : 'badge-eve'}">${slot.code}</span>
+                <span style="font-size:0.65rem; font-weight:800; color:${isAvail ? 'var(--success)' : isHold ? 'var(--hold)' : 'var(--danger)'};">
+                  ${badgeText}
+                </span>
+              </div>
+              <div style="font-size:0.75rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${statusObj.label}
+              </div>
+              ${isHold && statusObj.holdExpires ? `
+                <div style="font-size:0.62rem; color:var(--hold); margin-top:2px;">Expires: ${statusObj.holdExpires}</div>
+              ` : ''}
+              ${statusObj.conflictWith ? `
+                <div style="font-size:0.6rem; color:var(--danger); margin-top:2px;">Conflict: ${statusObj.conflictWith}</div>
+              ` : ''}
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    // CONFLICT RESOLUTION ENGINE: Checks if slot is occupied or conflicts via group
+    function getSlotStatus(space, dateStr, slotCode) {
+      // 1. Direct match on exact space
+      const direct = db.bookings.find(b => 
+        b.space_id === space.space_id &&
+        b.dates.includes(dateStr) &&
+        b.slots.includes(slotCode) &&
+        b.status !== "Cancelled"
+      );
+
+      if (direct) {
+        return {
+          status: direct.status,
+          label: direct.tenant_name || "Reserved",
+          bookingId: direct.booking_id,
+          holdExpires: direct.hold_expires_time || null
+        };
+      }
+
+      // 2. Conflict Group Check: Check if any OTHER space in the same conflict group is booked
+      const conflict = db.bookings.find(b => {
+        const bookedSpace = db.spaces.find(s => s.space_id === b.space_id);
+        if (!bookedSpace) return false;
+        return (
+          bookedSpace.conflict_group === space.conflict_group &&
+          b.dates.includes(dateStr) &&
+          b.slots.includes(slotCode) &&
+          b.status !== "Cancelled"
+        );
+      });
+
+      if (conflict) {
+        const conflictingSpace = db.spaces.find(s => s.space_id === conflict.space_id);
+        return {
+          status: conflict.status,
+          label: `Locked by ${conflictingSpace ? conflictingSpace.name : 'Subspace'}`,
+          bookingId: conflict.booking_id,
+          conflictWith: conflictingSpace ? conflictingSpace.name : "Conflict Group",
+          holdExpires: conflict.hold_expires_time || null
+        };
+      }
+
+      return { status: "Available", label: "Open to Reserve" };
+    }
+
+    // SPACES LIST RENDERER
+    function renderSpacesList() {
+      const container = document.getElementById("spacesGrid");
+      container.innerHTML = db.spaces.map(s => {
+        const isAuditoriumGroup = s.conflict_group === "GRP_MAIN_AUDITORIUM";
+        return `
+          <div class="venue-card">
+            <div>
+              <div class="venue-header">
+                <span class="venue-name">${s.name}</span>
+                <span class="venue-group-tag">${s.conflict_group}</span>
+              </div>
+              <div class="venue-info">
+                <span>Capacity: <b>${s.capacity} Pax</b></span> • 
+                <span>Rate: <b>₹${s.base_rate.toLocaleString()}/slot</b></span>
+              </div>
+              ${isAuditoriumGroup ? `
+                <div class="venue-conflict-warning">
+                  <span>⚡ Shares acoustic zone: cannot run concurrently with other ${s.conflict_group} spaces.</span>
+                </div>
+              ` : ''}
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+                ${s.description || 'Configured rental unit'}
+              </p>
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline btn-sm" onclick="quickBook('${s.space_id}')" style="width:100%;">
+                Select & Book Space
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // BOOKINGS TABLE RENDERER
+    function renderBookingsTable() {
+      const tbody = document.getElementById("bookingsTableBody");
+      if (db.bookings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No reservations recorded in local ledger.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = db.bookings.map(b => {
+        const space = db.spaces.find(s => s.space_id === b.space_id);
+        const due = Math.max(0, Number(b.grand_total) - Number(b.advance_paid));
+        const isHold = b.status === "Tentative_Hold";
+
+        return `
+          <tr>
+            <td style="font-family:monospace; font-weight:700;">${b.booking_id}</td>
+            <td style="font-weight:700;">${space ? space.name : b.space_id}</td>
+            <td>
+              <div>${b.tenant_name}</div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">${b.tenant_phone}</div>
+            </td>
+            <td>
+              <div style="font-size:0.72rem;">${b.dates.join(", ")}</div>
+              <div style="font-size:0.65rem; color:var(--primary); font-weight:700;">${b.slot_package_name || b.slots.join("+")}</div>
+            </td>
+            <td>
+              <span style="font-size:0.65rem; font-weight:800; padding:2px 6px; border-radius:4px; background:${isHold ? 'var(--hold-bg)' : 'var(--success-bg)'}; color:${isHold ? 'var(--hold)' : 'var(--success)'};">
+                ${b.status}
+              </span>
+            </td>
+            <td style="font-weight:700;">₹${Number(b.grand_total).toLocaleString()}</td>
+            <td style="color:var(--success); font-weight:700;">₹${Number(b.advance_paid).toLocaleString()}</td>
+            <td style="color:${due > 0 ? 'var(--accent-gold)' : 'var(--text-dim)'}; font-weight:800;">₹${due.toLocaleString()}</td>
+            <td style="text-align:right;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="inspectBooking('${b.booking_id}')">
+                Inspect
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // ON SPACE OR DATE CHANGE IN BOOKING MODAL
+    function onSpaceOrDateChange() {
+      const spaceId = document.getElementById("bookSpaceSelect").value;
+      const space = db.spaces.find(s => s.space_id === spaceId);
+      if (!space) return;
+
+      const pkgSelect = document.getElementById("bookPackageSelect");
+      const cautionToggle = document.getElementById("cautionToggle");
+      const cautionInfo = document.getElementById("cautionInfoText");
+
+      // Dynamic package availability based on space rules
+      if (space.space_id === "SP-MAIN-FULL") {
+        // Full venue combos
+        pkgSelect.innerHTML = `
+          <option value="Single_Morn">Single Morning Slot (10-16h) - ₹15,000</option>
+          <option value="Single_Eve">Single Evening Slot (17-22h) - ₹15,000</option>
+          <option value="D1_Morn_Eve">Same Day Morning + Evening - ₹40,000</option>
+          <option value="D1_Eve_D2_Morn">D1 Evening + D2 Morning - ₹25,000</option>
+          <option value="Two_Mornings">Two Mornings (D1 Morn + D2 Morn) - ₹35,000</option>
+          <option value="Two_Evenings">Two Evenings (D1 Eve + D2 Eve) - ₹35,000</option>
+        `;
+        cautionToggle.disabled = false;
+        cautionToggle.checked = true;
+        cautionInfo.innerText = "Full Venue refundable caution deposit (₹10,000)";
+      } else if (space.space_id === "SP-TOP-SOLO") {
+        // First floor solo: no combos allowed
+        pkgSelect.innerHTML = `
+          <option value="Single_Morn">Single Morning Slot (10-16h) - ₹5,000</option>
+          <option value="Single_Eve">Single Evening Slot (17-22h) - ₹5,000</option>
+        `;
+        cautionToggle.checked = false;
+        cautionToggle.disabled = true;
+        cautionInfo.innerText = "Caution deposit not applicable for First Floor";
+      } else {
+        // Dynamically added spaces or parking
+        pkgSelect.innerHTML = `
+          <option value="Single_Morn">Morning Slot - ₹${space.base_rate.toLocaleString()}</option>
+          <option value="Single_Eve">Evening Slot - ₹${space.base_rate.toLocaleString()}</option>
+          <option value="D1_Morn_Eve">Full Day (Both Slots) - ₹${(space.base_rate * 2).toLocaleString()}</option>
+        `;
+        cautionToggle.checked = false;
+        cautionInfo.innerText = "Optional deposit";
+      }
+
+      recalcLedger();
+    }
+
+    function onSlotPackageChange() {
+      recalcLedger();
+    }
+
+    function toggleParkingInput() {
+      const isChecked = document.getElementById("parkingToggle").checked;
+      document.getElementById("parkingInputWrap").style.display = isChecked ? "block" : "none";
+      recalcLedger();
+    }
+
+    function togglePayFields() {
+      const mode = document.getElementById("payMode").value;
+      document.getElementById("upiFields").style.display = mode === "UPI" ? "grid" : "none";
+    }
+
+    // CALCULATION & PRICING ENGINE
+    function recalcLedger() {
+      const spaceId = document.getElementById("bookSpaceSelect").value;
+      const space = db.spaces.find(s => s.space_id === spaceId);
+      if (!space) return;
+
+      const pkg = document.getElementById("bookPackageSelect").value;
+      const guestPax = parseInt(document.getElementById("bookGuestPax").value) || 0;
+      const cfg = db.config;
+
+      // 1. Base Venue Fee
+      let venueBase = 0;
+      let slotCount = 1;
+
+      if (space.space_id === "SP-MAIN-FULL") {
+        switch (pkg) {
+          case "Single_Morn": venueBase = cfg.RATE_FULL_MORN; slotCount = 1; break;
+          case "Single_Eve": venueBase = cfg.RATE_FULL_EVE; slotCount = 1; break;
+          case "D1_Morn_Eve": venueBase = cfg.RATE_FULL_SAME_DAY_BOTH; slotCount = 2; break;
+          case "D1_Eve_D2_Morn": venueBase = cfg.RATE_FULL_EVE_NEXT_MORN; slotCount = 2; break;
+          case "Two_Mornings": venueBase = cfg.RATE_FULL_TWO_MORNINGS; slotCount = 2; break;
+          case "Two_Evenings": venueBase = cfg.RATE_FULL_TWO_EVENINGS; slotCount = 2; break;
+          default: venueBase = cfg.RATE_FULL_MORN; slotCount = 1;
+        }
+      } else if (space.space_id === "SP-TOP-SOLO") {
+        venueBase = cfg.RATE_TOP_PER_SLOT;
+        slotCount = 1;
+      } else {
+        slotCount = pkg === "D1_Morn_Eve" ? 2 : 1;
+        venueBase = space.base_rate * slotCount;
+      }
+
+      // 2. Extra Pax Surcharge (+₹200/extra pax)
+      let extraPaxCharge = 0;
+      const paxNotice = document.getElementById("paxSurchargeNotice");
+      if (space.capacity > 0 && guestPax > space.capacity) {
+        const excess = guestPax - space.capacity;
+        extraPaxCharge = excess * (cfg.EXTRA_PAX_SURCHARGE_PER_HEAD || 200);
+        paxNotice.style.display = "block";
+      } else {
+        paxNotice.style.display = "none";
+      }
+
+      // 3. Parking Levy
+      let parkingFee = 0;
+      const isParking = document.getElementById("parkingToggle").checked;
+      const lineParking = document.getElementById("lineParking");
+      if (isParking) {
+        const sqft = parseFloat(document.getElementById("parkingSqft").value) || 0;
+        const minFee = cfg.PARKING_MIN_FEE || 4000;
+        const rateSqft = cfg.PARKING_PER_SQFT || 200;
+        parkingFee = Math.max(minFee, sqft * rateSqft) * slotCount;
+        lineParking.style.display = "flex";
+        document.getElementById("leadParking").innerText = `₹${parkingFee.toLocaleString()}`;
+      } else {
+        lineParking.style.display = "none";
+      }
+
+      // 4. Waste Disposal Fee
+      let wasteFee = 0;
+      const isWaste = document.getElementById("wasteToggle").checked;
+      const lineWaste = document.getElementById("lineWaste");
+      if (isWaste) {
+        wasteFee = cfg.WASTE_DISPOSAL_FEE || 1000;
+        lineWaste.style.display = "flex";
+        document.getElementById("leadWaste").innerText = `₹${wasteFee.toLocaleString()}`;
+      } else {
+        lineWaste.style.display = "none";
+      }
+
+      // Subtotal before tax
+      const subtotal = venueBase + extraPaxCharge + parkingFee + wasteFee;
+
+      // 5. GST (18%)
+      let gstAmount = 0;
+      const isGst = document.getElementById("gstToggle").checked;
+      const lineGst = document.getElementById("lineGst");
+      if (isGst) {
+        gstAmount = Math.round(subtotal * ((cfg.GST_PERCENT || 18) / 100));
+        lineGst.style.display = "flex";
+        document.getElementById("leadGst").innerText = `₹${gstAmount.toLocaleString()}`;
+      } else {
+        lineGst.style.display = "none";
+      }
+
+      // 6. Caution Deposit
+      let cautionDeposit = 0;
+      const isCaution = document.getElementById("cautionToggle").checked;
+      const lineCaution = document.getElementById("lineCaution");
+      if (isCaution && space.space_id === "SP-MAIN-FULL") {
+        cautionDeposit = cfg.CAUTION_DEPOSIT_FULL || 10000;
+        lineCaution.style.display = "flex";
+        document.getElementById("leadCaution").innerText = `₹${cautionDeposit.toLocaleString()}`;
+      } else {
+        lineCaution.style.display = "none";
+      }
+
+      const grandTotal = subtotal + gstAmount + cautionDeposit;
+
+      // Advance Percentage: 50% for Full Venue, 100% for Top Floor
+      const advPct = space.space_id === "SP-MAIN-FULL" ? (cfg.ADVANCE_PCT_FULL || 50) : (cfg.ADVANCE_PCT_TOP || 100);
+      const advRequired = Math.round(grandTotal * (advPct / 100));
+
+      // Update Ledger DOM
+      document.getElementById("leadVenueBase").innerText = `₹${venueBase.toLocaleString()}`;
+      document.getElementById("leadExtraPax").innerText = `+₹${extraPaxCharge.toLocaleString()}`;
+      document.getElementById("leadGrandTotal").innerText = `₹${grandTotal.toLocaleString()}`;
+      document.getElementById("leadAdvancePct").innerText = advPct;
+      document.getElementById("leadAdvanceReq").innerText = `₹${advRequired.toLocaleString()}`;
+
+      // Default the advance input if empty
+      const payInput = document.getElementById("payAmount");
+      if (!payInput.value || payInput.dataset.autoFilled === "true") {
+        payInput.value = advRequired;
+        payInput.dataset.autoFilled = "true";
+      }
+    }
+
+    // MANDATORY ID PROOF FILE HANDLER
+    function handleIdProofFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("idProofBase64").value = e.target.result;
+        const img = document.getElementById("idImagePreview");
+        img.src = e.target.result;
+        img.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ZERO-DEPENDENCY OFFLINE TEST ID GENERATOR (Using standard HTML5 Canvas)
+    function generateStandaloneTestId() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 320;
+      canvas.height = 190;
+      const ctx = canvas.getContext("2d");
+
+      // Draw ID Card
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(0, 0, 320, 190);
+
+      ctx.fillStyle = "#38bdf8";
+      ctx.fillRect(0, 0, 320, 32);
+
+      ctx.fillStyle = "#0f172a";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText("GOVERNMENT ID PROOF (VERIFIED)", 20, 21);
+
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "bold 13px sans-serif";
+      const name = document.getElementById("tName").value || "Authorized Tenant";
+      ctx.fillText(name, 20, 65);
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("DOB: 14/08/1992   Gender: Male", 20, 88);
+      ctx.fillText("Address: MG Road, Bangalore", 20, 108);
+
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "bold 11px monospace";
+      ctx.fillText("DOC REF: IN-VERIFIED-KYC-902", 20, 135);
+
+      // Official Stamp
+      ctx.strokeStyle = "#10b981";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(210, 130, 95, 40);
+      ctx.fillStyle = "#10b981";
+      ctx.font = "bold 10px sans-serif";
+      ctx.fillText("OFFICIAL STAMP", 216, 154);
+
+      const base64 = canvas.toDataURL("image/jpeg");
+      document.getElementById("idProofBase64").value = base64;
+      const img = document.getElementById("idImagePreview");
+      img.src = base64;
+      img.style.display = "block";
+      showToast("Standalone Test ID Generated!");
+    }
+
+    // SUBMIT BOOKING HANDLER
+    function handleBookingSubmit(event) {
+      event.preventDefault();
+
+      const idData = document.getElementById("idProofBase64").value;
+      if (!idData) {
+        alert("Mandatory physical government ID proof is missing.");
+        return;
+      }
+
+      const spaceId = document.getElementById("bookSpaceSelect").value;
+      const space = db.spaces.find(s => s.space_id === spaceId);
+      const pkg = document.getElementById("bookPackageSelect").value;
+      const startDate = document.getElementById("bookStartDate").value;
+      const status = document.getElementById("bookStatusSelect").value;
+      const advancePaid = parseFloat(document.getElementById("payAmount").value) || 0;
+
+      // Determine date list & slot codes
+      let dates = [startDate];
+      let slots = ["MORN"];
+      let nextDate = getNextDay(startDate);
+
+      if (pkg === "Single_Morn") slots = ["MORN"];
+      else if (pkg === "Single_Eve") slots = ["EVE"];
+      else if (pkg === "D1_Morn_Eve") slots = ["MORN", "EVE"];
+      else if (pkg === "D1_Eve_D2_Morn") { dates = [startDate, nextDate]; slots = ["EVE", "MORN"]; }
+      else if (pkg === "Two_Mornings") { dates = [startDate, nextDate]; slots = ["MORN"]; }
+      else if (pkg === "Two_Evenings") { dates = [startDate, nextDate]; slots = ["EVE"]; }
+
+      // Conflict validation check before saving
+      for (const d of dates) {
+        for (const s of slots) {
+          const check = getSlotStatus(space, d, s);
+          if (check.status !== "Available") {
+            alert(`Booking Conflict: Slot ${s} on ${d} is already ${check.status} (${check.label}).`);
+            return;
+          }
+        }
+      }
+
+      // Compute Hold Expiration
+      let holdExpires = "";
+      if (status === "Tentative_Hold") {
+        const holdHours = space.space_id === "SP-MAIN-FULL" ? (db.config.HOLD_HOURS_FULL || 48) : (db.config.HOLD_HOURS_TOP || 24);
+        const exp = new Date(Date.now() + holdHours * 3600 * 1000);
+        holdExpires = exp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " (" + holdHours + "h)";
+      }
+
+      // Grand total extraction
+      const totalStr = document.getElementById("leadGrandTotal").innerText.replace(/[^0-9]/g, "");
+      const grandTotal = parseInt(totalStr) || 0;
+
+      const newBooking = {
+        booking_id: "AUD-" + Date.now().toString().slice(-6),
+        created_at: new Date().toISOString(),
+        space_id: spaceId,
+        slot_package: pkg,
+        slot_package_name: document.getElementById("bookPackageSelect").selectedOptions[0].text,
+        dates: dates,
+        slots: slots,
+        tenant_name: document.getElementById("tName").value,
+        tenant_phone: document.getElementById("tPhone").value,
+        tenant_alt_phone: document.getElementById("tAltPhone").value,
+        tenant_purpose: document.getElementById("tPurpose").value,
+        tenant_org: document.getElementById("tOrg").value,
+        suggested_by: document.getElementById("tSuggestedBy").value,
+        remarks: document.getElementById("tRemarks").value,
+        id_proof_base64: idData,
+        grand_total: grandTotal,
+        advance_paid: advancePaid,
+        status: status,
+        hold_expires_time: holdExpires,
+        payment_mode: document.getElementById("payMode").value,
+        upi_ref: document.getElementById("upiUtr").value || ""
+      };
+
+      db.bookings.unshift(newBooking);
+      saveLocalData();
+
+      closeModal("bookingModal");
+      document.getElementById("bookingForm").reset();
+      document.getElementById("idProofBase64").value = "";
+      document.getElementById("idImagePreview").style.display = "none";
+
+      showToast(`Reservation ${newBooking.booking_id} saved successfully!`);
+      renderApp();
+    }
+
+    // INSPECT BOOKING MODAL
+    function inspectBooking(bookingId) {
+      const b = db.bookings.find(i => i.booking_id === bookingId);
+      if (!b) return;
+
+      const space = db.spaces.find(s => s.space_id === b.space_id);
+      const balance = Math.max(0, Number(b.grand_total) - Number(b.advance_paid));
+
+      const body = document.getElementById("inspectBody");
+      body.innerHTML = `
+        <div style="background:var(--bg-main); padding:0.75rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:0.75rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="color:var(--primary); font-size:0.9rem;">${b.booking_id}</strong>
+            <span style="font-size:0.7rem; font-weight:700; color:${b.status === 'Confirmed' ? 'var(--success)' : 'var(--hold)'};">
+              ● ${b.status}
+            </span>
+          </div>
+          <div style="font-size:0.8rem; font-weight:700; margin-top:2px;">${space ? space.name : b.space_id}</div>
+          <div style="font-size:0.7rem; color:var(--text-muted);">Dates: ${b.dates.join(", ")} | Package: ${b.slot_package_name}</div>
+        </div>
+
+        <div style="margin-bottom:0.75rem;">
+          <label>CUSTOMER PROFILE</label>
+          <div style="font-size:0.95rem; font-weight:800;">${b.tenant_name}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">📞 ${b.tenant_phone} ${b.tenant_alt_phone ? ' | ' + b.tenant_alt_phone : ''}</div>
+          <div style="font-size:0.75rem; margin-top:3px;">Purpose: <b>${b.tenant_purpose || 'Event'}</b> ${b.tenant_org ? `(${b.tenant_org})` : ''}</div>
+        </div>
+
+        <div style="margin-bottom:0.75rem;">
+          <label>GOVERNMENT ID PROOF</label>
+          ${b.id_proof_base64 ? `
+            <img src="${b.id_proof_base64}" style="width:100%; max-height:160px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-top:4px;">
+          ` : '<p style="color:var(--text-dim); font-size:0.75rem;">No ID uploaded</p>'}
+        </div>
+
+        <div class="ledger-box" style="margin-bottom:0.75rem;">
+          <div class="ledger-line"><span>Grand Total:</span><b>₹${Number(b.grand_total).toLocaleString()}</b></div>
+          <div class="ledger-line" style="color:var(--success);"><span>Advance Paid (${b.payment_mode || 'Cash'}):</span><b>₹${Number(b.advance_paid).toLocaleString()}</b></div>
+          ${b.upi_ref ? `<div class="ledger-line" style="font-size:0.7rem;"><span>UPI UTR:</span><b>${b.upi_ref}</b></div>` : ''}
+          <div class="ledger-line total" style="color:var(--accent-gold);"><span>Outstanding Balance:</span><span>₹${balance.toLocaleString()}</span></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          ${balance > 0 ? `
+            <button type="button" class="btn btn-primary" onclick="settleBalanceDirect('${b.booking_id}', ${balance})">
+              Settle Balance (₹${balance.toLocaleString()})
+            </button>
+          ` : `
+            <div style="text-align:center; padding:0.5rem; background:var(--success-bg); color:var(--success); font-weight:700; border-radius:var(--radius-md); font-size:0.8rem;">
+              ✓ Fully Settled
+            </div>
+          `}
+
+          ${currentRole === 'admin' ? `
+            <button type="button" class="btn btn-danger" onclick="cancelReservationPrompt('${b.booking_id}')">
+              Cancel Reservation & Check Re-Booking Refund
+            </button>
+          ` : ''}
+        </div>
+      `;
+
+      openModal("tenantInspectModal");
+    }
+
+    function settleBalanceDirect(bookingId, amount) {
+      const b = db.bookings.find(i => i.booking_id === bookingId);
+      if (!b) return;
+      b.advance_paid = Number(b.advance_paid) + amount;
+      b.status = "Confirmed";
+      saveLocalData();
+      showToast("Balance payment logged!");
+      renderApp();
+      inspectBooking(bookingId);
+    }
+
+    // CANCELLATION & DISCRETIONARY REFUND WORKFLOW
+    function cancelReservationPrompt(bookingId) {
+      const b = db.bookings.find(i => i.booking_id === bookingId);
+      if (!b) return;
+
+      const confirmCancel = confirm(`Are you sure you want to cancel booking ${b.booking_id}?`);
+      if (!confirmCancel) return;
+
+      // Check if slot was rebooked by another tenant
+      const isRebooked = db.bookings.some(other => 
+        other.booking_id !== b.booking_id &&
+        other.space_id === b.space_id &&
+        other.dates.some(d => b.dates.includes(d)) &&
+        other.status === "Confirmed"
+      );
+
+      if (isRebooked) {
+        alert("The cancelled slot has been availed by another booking. 100% full refund is authorized.");
+        b.refund_status = "Full_Refund_Rebooked";
+      } else {
+        alert("Slot remains vacant. Advance is currently withheld. Discretionary refund can be processed on formal request.");
+        b.refund_status = "Withheld_Awaiting_Request";
+      }
+
+      b.status = "Cancelled";
+      saveLocalData();
+      closeModal("tenantInspectModal");
+      renderApp();
+      showToast("Reservation marked as Cancelled.");
+    }
+
+    // ADD NEW SPACE (EXPANSION PROVISION)
+    function handleCreateSpace(event) {
+      event.preventDefault();
+      const name = document.getElementById("newSpaceName").value.trim();
+      const cap = parseInt(document.getElementById("newSpaceCapacity").value) || 100;
+      const rate = parseInt(document.getElementById("newSpaceRate").value) || 5000;
+      const group = document.getElementById("newSpaceConflictGroup").value.trim().toUpperCase();
+      const desc = document.getElementById("newSpaceDesc").value.trim();
+
+      const newId = "SP-EXP-" + Date.now().toString().slice(-4);
+      db.spaces.push({
+        space_id: newId,
+        name: name,
+        capacity: cap,
+        conflict_group: group,
+        base_rate: rate,
+        description: desc || "Additional venue space"
+      });
+
+      saveLocalData();
+      populateSpaceDropdown();
+      closeModal("addSpaceModal");
+      showToast(`Venue "${name}" registered successfully!`);
+      renderApp();
+    }
+
+    // MODAL HELPERS
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+    function openNewBookingModal() {
+      openModal("bookingModal");
+      onSpaceOrDateChange();
+    }
+    function openAddSpaceModal() {
+      openModal("addSpaceModal");
+    }
+
+    function quickBook(spaceId) {
+      document.getElementById("bookSpaceSelect").value = spaceId;
+      openNewBookingModal();
+    }
+
+    function handleSlotCardClick(spaceId, dateStr, slotCode, status, bookingId) {
+      if (status === "Available") {
+        document.getElementById("bookSpaceSelect").value = spaceId;
+        document.getElementById("bookStartDate").value = dateStr;
+        openNewBookingModal();
+      } else if (bookingId && currentRole !== 'customer') {
+        inspectBooking(bookingId);
+      } else {
+        showToast(`Slot is ${status}.`);
+      }
+    }
+
+    // EXPORT BACKUP JSON
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `auditorium_backup_${new Date().toISOString().split("T")[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Backup exported!");
+    }
+
+    // HELPER: UTILS
+    function getNextDay(dateString) {
+      const d = new Date(dateString);
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().split("T")[0];
+    }
+
+    function scrollToElement(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.innerText = msg;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+  </script>
+</body>
+</html>
