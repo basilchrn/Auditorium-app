@@ -648,3 +648,210 @@ tr:last-child td { border-bottom: none; }
   display: none;
   z-index: 60;
 }
+
+/* ====================================================
+   MONTHLY CALENDAR VIEW (8-MONTH WINDOW)
+   ==================================================== */
+.monthly-cal-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.monthly-cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.monthly-cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.monthly-cal-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.monthly-cal-select {
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  outline: none;
+}
+.monthly-cal-select:focus {
+  border-color: var(--primary);
+}
+
+.monthly-cal-legend {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+}
+
+.monthly-legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+.monthly-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+@media (max-width: 640px) {
+  .monthly-grid {
+    gap: 4px;
+  }
+}
+
+.monthly-weekday-label {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0;
+}
+.monthly-weekday-label.weekend {
+  color: var(--accent-gold);
+}
+
+.monthly-day-cell {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  min-height: 84px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 3px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .monthly-day-cell {
+    min-height: 72px;
+    padding: 4px 2px;
+  }
+}
+
+.monthly-day-cell:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.monthly-day-cell.other-month {
+  opacity: 0.2;
+  pointer-events: none;
+  background: transparent;
+}
+
+.monthly-day-cell.is-today {
+  border-color: var(--primary);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.monthly-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 0 2px;
+}
+
+.monthly-day-number {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.monthly-day-cell.is-today .monthly-day-number {
+  background: var(--primary);
+  color: #0f172a;
+  border-radius: var(--radius-full);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+}
+
+/* Status tabs on day cells */
+.status-tab {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+@media (max-width: 640px) {
+  .status-tab {
+    font-size: 0.56rem;
+    padding: 1px 2px;
+  }
+}
+
+/* RED TAB: Booked (Main venue or top floor) */
+.tab-booked-red {
+  background: rgba(244, 63, 94, 0.22);
+  color: #fda4af;
+  border: 1px solid rgba(244, 63, 94, 0.6);
+}
+
+/* GREEN TAB: Available (Both venues vacant) */
+.tab-avail-green {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+}
+
+/* RED TAB: Parking Booked */
+.tab-parking-red {
+  background: rgba(239, 68, 68, 0.22);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.65);
+}
