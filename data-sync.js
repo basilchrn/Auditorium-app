@@ -154,45 +154,48 @@ const DataStore = {
       }
 
       const liveBookings = (json.data.bookings && Array.isArray(json.data.bookings))
-        ? json.data.bookings.map(b => {
-            const t = tenantsMap.get(String(b.booking_id)) || {};
-            const dates = String(b.dates_csv || "").split(",").map(d => d.trim()).filter(Boolean);
-            const slots = String(b.slots_csv || "").split(",").map(s => s.trim()).filter(Boolean);
-            return {
-              booking_id: String(b.booking_id),
-              created_at: b.created_at,
-              space_id: String(b.space_id),
-              slot_package: b.slot_package,
-              slot_package_name: b.slot_package,
-              dates: dates,
-              slots: slots,
-              expected_pax: Number(b.expected_pax || 0),
-              base_venue_fee: Number(b.base_venue_fee || 0),
-              extra_pax_fee: Number(b.extra_pax_fee || 0),
-              parking_sqft: Number(b.parking_sqft || 0),
-              parking_fee: Number(b.parking_fee || 0),
-              waste_fee: Number(b.waste_fee || 0),
-              caution_deposit: Number(b.caution_deposit || 0),
-              taxable_subtotal: Number(b.taxable_subtotal || 0),
-              gst_amount: Number(b.gst_amount || 0),
-              grand_total: Number(b.grand_total || 0),
-              advance_required: Number(b.advance_required || 0),
-              advance_paid: Number(b.advance_paid || 0),
-              balance_due: Number(b.balance_due || 0),
-              status: b.booking_status,
-              hold_expires_time: b.hold_expiry_timestamp,
-              refund_status: b.refund_status,
-              tenant_name: t.full_name || "Guest",
-              tenant_phone: t.phone_primary || "",
-              tenant_alt_phone: t.phone_alternate || "",
-              tenant_purpose: t.event_purpose || "",
-              tenant_org: t.organization_name || "",
-              suggested_by: t.suggested_by || "",
-              remarks: t.special_remarks || "",
-              id_proof_url: t.govt_id_drive_url || ""
-            };
-          })
-        : [];
+  ? json.data.bookings.map(b => {
+      const t = tenantsMap.get(String(b.booking_id)) || {};
+      const rawDates = String(b.dates_csv || "").split(",").map(d => d.trim()).filter(Boolean);
+      // Normalize all dates to clean YYYY-MM-DD
+      const dates = rawDates.map(normalizeIsoDate);
+      const slots = String(b.slots_csv || "").split(",").map(s => s.trim()).filter(Boolean);
+      
+      return {
+        booking_id: String(b.booking_id),
+        created_at: b.created_at,
+        space_id: String(b.space_id),
+        slot_package: b.slot_package,
+        slot_package_name: b.slot_package,
+        dates: dates,
+        slots: slots,
+        expected_pax: Number(b.expected_pax || 0),
+        base_venue_fee: Number(b.base_venue_fee || 0),
+        extra_pax_fee: Number(b.extra_pax_fee || 0),
+        parking_sqft: Number(b.parking_sqft || 0),
+        parking_fee: Number(b.parking_fee || 0),
+        waste_fee: Number(b.waste_fee || 0),
+        caution_deposit: Number(b.caution_deposit || 0),
+        taxable_subtotal: Number(b.taxable_subtotal || 0),
+        gst_amount: Number(b.gst_amount || 0),
+        grand_total: Number(b.grand_total || 0),
+        advance_required: Number(b.advance_required || 0),
+        advance_paid: Number(b.advance_paid || 0),
+        balance_due: Number(b.balance_due || 0),
+        status: b.booking_status,
+        hold_expires_time: b.hold_expiry_timestamp,
+        refund_status: b.refund_status,
+        tenant_name: t.full_name || "Guest",
+        tenant_phone: t.phone_primary || "",
+        tenant_alt_phone: t.phone_alternate || "",
+        tenant_purpose: t.event_purpose || "",
+        tenant_org: t.organization_name || "",
+        suggested_by: t.suggested_by || "",
+        remarks: t.special_remarks || "",
+        id_proof_url: t.govt_id_drive_url || ""
+      };
+    })
+  : [];
 
       const liveConfig = (json.config && Object.keys(json.config).length > 0)
         ? { ...DEFAULT_CONFIG, ...json.config }
