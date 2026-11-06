@@ -1442,113 +1442,138 @@ function getDayBookingEvaluation(isoDate) {
   };
 }
 
-/**
- * Renders the full monthly grid
- */
-function renderMonthlyCalendar() {
-  const grid = document.getElementById("monthlyCalendarGrid");
-  const prevBtn = document.getElementById("calPrevMonthBtn");
-  const nextBtn = document.getElementById("calNextMonthBtn");
-  if (!grid) return;
-
-  // Toggle boundary button states
-  if (prevBtn) prevBtn.disabled = (gMonthlyOffset <= MIN_MONTH_OFFSET);
-  if (nextBtn) nextBtn.disabled = (gMonthlyOffset >= MAX_MONTH_OFFSET);
-
-  grid.innerHTML = "";
-
-  const targetMonthDate = getOffsetDate(gMonthlyOffset);
-  const year = targetMonthDate.getFullYear();
-  const month = targetMonthDate.getMonth();
-
-  const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sun
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const prevMonthLastDate = new Date(year, month, 0).getDate();
-
-  // 1. Previous month trailing days
-  for (let i = firstDayIndex - 1; i >= 0; i--) {
-    const prevDateNum = prevMonthLastDate - i;
-    const cell = document.createElement("div");
-    cell.className = "monthly-day-cell other-month";
-    cell.innerHTML = `
-      <div class="monthly-day-header">
-        <span class="monthly-day-number">${prevDateNum}</span>
-      </div>
-    `;
-    grid.appendChild(cell);
-  }
-
-  // Current today reference
-  const now = new Date();
-  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-
-  // 2. Current Month Days
-  for (let day = 1; day <= daysInMonth; day++) {
-    const mStr = String(month + 1).padStart(2, "0");
-    const dStr = String(day).padStart(2, "0");
-    const isoDate = `${year}-${mStr}-${dStr}`;
-
-    const cell = document.createElement("div");
-    cell.className = "monthly-day-cell";
-    if (isoDate === todayIso) {
-      cell.classList.add("is-today");
+  /**
+   * Renders the full monthly grid
+   */
+  function renderMonthlyCalendar() {
+    const grid = document.getElementById("monthlyCalendarGrid");
+    const prevBtn = document.getElementById("calPrevMonthBtn");
+    const nextBtn = document.getElementById("calNextMonthBtn");
+    if (!grid) return;
+  
+    // Toggle boundary button states
+    if (prevBtn) prevBtn.disabled = (gMonthlyOffset <= MIN_MONTH_OFFSET);
+    if (nextBtn) nextBtn.disabled = (gMonthlyOffset >= MAX_MONTH_OFFSET);
+  
+    grid.innerHTML = "";
+  
+    const targetMonthDate = getOffsetDate(gMonthlyOffset);
+    const year = targetMonthDate.getFullYear();
+    const month = targetMonthDate.getMonth();
+  
+    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sun
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthLastDate = new Date(year, month, 0).getDate();
+  
+    // 1. Previous month trailing days
+    for (let i = firstDayIndex - 1; i >= 0; i--) {
+      const prevDateNum = prevMonthLastDate - i;
+      const cell = document.createElement("div");
+      cell.className = "monthly-day-cell other-month";
+      cell.innerHTML = `
+        <div class="monthly-day-header">
+          <span class="monthly-day-number">${prevDateNum}</span>
+        </div>
+      `;
+      grid.appendChild(cell);
     }
-
-    const evalResult = getDayBookingEvaluation(isoDate);
-
-    // Build tabs based on business logic:
-    // a) Main venue or top floor: RED if booked, GREEN if both vacant
-    let venueTabHtml = "";
-    if (evalResult.isVenueBooked) {
-      const spaceLabel = evalResult.venueBooking.space_id === "SP-MAIN-FULL" ? "Main Venue" : "Top Floor";
-      venueTabHtml = `<div class="status-tab tab-booked-red" title="${spaceLabel} Booked">🔴 Booked</div>`;
-    } else {
-      venueTabHtml = `<div class="status-tab tab-avail-green" title="Main & Top Floor Vacant">🟢 Available</div>`;
-    }
-
-    // b) Parking: RED tab if booked
-    let parkingTabHtml = "";
-    if (evalResult.isParkingBooked) {
-      parkingTabHtml = `<div class="status-tab tab-parking-red" title="Parking Area Booked">🚗 Parking Booked</div>`;
-    }
-
-    cell.innerHTML = `
-      <div class="monthly-day-header">
-        <span class="monthly-day-number">${day}</span>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:3px;">
-        ${venueTabHtml}
-        ${parkingTabHtml}
-      </div>
-    `;
-
-    // Click handler to open inspection or booking modal directly
-    cell.addEventListener("click", () => {
-      if (evalResult.venueBooking && currentRole !== 'customer') {
-        inspectBooking(evalResult.venueBooking.booking_id);
-      } else {
-        document.getElementById("bookStartDate").value = isoDate;
-        openNewBookingModal();
+  
+    // Current today reference
+    const now = new Date();
+    const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  
+    // 2. Current Month Days
+    for (let day = 1; day <= daysInMonth; day++) {
+      const mStr = String(month + 1).padStart(2, "0");
+      const dStr = String(day).padStart(2, "0");
+      const isoDate = `${year}-${mStr}-${dStr}`;
+  
+      const cell = document.createElement("div");
+      cell.className = "monthly-day-cell";
+      if (isoDate === todayIso) {
+        cell.classList.add("is-today");
       }
-    });
-
-    grid.appendChild(cell);
+  
+      const evalResult = getDayBookingEvaluation(isoDate);
+  
+      // Build tabs based on business logic:
+      // a) Main venue or top floor: RED if booked, GREEN if both vacant
+      let venueTabHtml = "";
+      if (evalResult.isVenueBooked) {
+        const spaceLabel = evalResult.venueBooking.space_id === "SP-MAIN-FULL" ? "Main Venue" : "Top Floor";
+        venueTabHtml = `<div class="status-tab tab-booked-red" title="${spaceLabel} Booked">🔴 Booked</div>`;
+      } else {
+        venueTabHtml = `<div class="status-tab tab-avail-green" title="Main & Top Floor Vacant">🟢 Available</div>`;
+      }
+  
+      // b) Parking: RED tab if booked
+      let parkingTabHtml = "";
+      if (evalResult.isParkingBooked) {
+        parkingTabHtml = `<div class="status-tab tab-parking-red" title="Parking Area Booked">🚗 Parking Booked</div>`;
+      }
+  
+      cell.innerHTML = `
+        <div class="monthly-day-header">
+          <span class="monthly-day-number">${day}</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          ${venueTabHtml}
+          ${parkingTabHtml}
+        </div>
+      `;
+  
+      // Click handler to open inspection or booking modal directly
+      cell.addEventListener("click", () => {
+        if (evalResult.venueBooking && currentRole !== 'customer') {
+          inspectBooking(evalResult.venueBooking.booking_id);
+        } else {
+          document.getElementById("bookStartDate").value = isoDate;
+          openNewBookingModal();
+        }
+      });
+  
+      grid.appendChild(cell);
+    }
+  
+    // 3. Next month leading days
+    const totalRendered = firstDayIndex + daysInMonth;
+    const trailingCount = (7 - (totalRendered % 7)) % 7;
+    for (let nextDay = 1; nextDay <= trailingCount; nextDay++) {
+      const cell = document.createElement("div");
+      cell.className = "monthly-day-cell other-month";
+      cell.innerHTML = `
+        <div class="monthly-day-header">
+          <span class="monthly-day-number">${nextDay}</span>
+        </div>
+      `;
+      grid.appendChild(cell);
+    }
   }
 
-  // 3. Next month leading days
-  const totalRendered = firstDayIndex + daysInMonth;
-  const trailingCount = (7 - (totalRendered % 7)) % 7;
-  for (let nextDay = 1; nextDay <= trailingCount; nextDay++) {
-    const cell = document.createElement("div");
-    cell.className = "monthly-day-cell other-month";
-    cell.innerHTML = `
-      <div class="monthly-day-header">
-        <span class="monthly-day-number">${nextDay}</span>
-      </div>
-    `;
-    grid.appendChild(cell);
-  }
-}
+      /**
+     * Robust Date Normalizer: Converts any date format to standard YYYY-MM-DD
+     */
+    function normalizeIsoDate(val) {
+      if (!val) return "";
+      if (val instanceof Date) {
+        const y = val.getFullYear();
+        const m = String(val.getMonth() + 1).padStart(2, "0");
+        const d = String(val.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+      let s = String(val).trim();
+      if (s.includes("T")) s = s.split("T")[0].trim();
+      
+      // Matches YYYY-MM-DD or YYYY/MM/DD
+      const m1 = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+      if (m1) return `${m1[1]}-${String(m1[2]).padStart(2, "0")}-${String(m1[3]).padStart(2, "0")}`;
+      
+      // Matches DD-MM-YYYY or DD/MM/YYYY
+      const m2 = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+      if (m2) return `${m2[3]}-${String(m2[2]).padStart(2, "0")}-${String(m2[1]).padStart(2, "0")}`;
+      
+      return s;
+    }
   </script>
   <script src="system-logic.js"></script>
 </body>
