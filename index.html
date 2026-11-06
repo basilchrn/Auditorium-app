@@ -116,53 +116,29 @@
     </section>
 
 <!-- ==================== 2. MONTHLY CALENDAR TAB (AFTER VENUE TAB) ==================== -->
+<!-- VENUES SECTION -->
+    <section style="margin-bottom: 2rem;" id="spacesSection">
+      ...
+    </section>
+
+    <!-- CALENDAR TAB (AFTER VENUE TAB) -->
     <section class="monthly-cal-container" id="monthlyCalendarSection">
-      
-      <!-- Calendar Header & 8-Month Navigation -->
       <div class="monthly-cal-header">
         <div>
-          <div class="monthly-cal-title">
-            <span>📆 Venue Availability Calendar</span>
-          </div>
-          <p style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-            Showing booking status for previous month, live month, and next 6 months
+          <h2 style="font-size:1.1rem; font-weight:800;">📆 Venue Booking Status Calendar</h2>
+          <p style="font-size:0.72rem; color:var(--text-muted);">
+            Occupancy status across previous month, live month, and next 6 months
           </p>
         </div>
-
-        <div class="monthly-cal-nav">
-          <button type="button" class="btn btn-outline btn-sm" id="calPrevMonthBtn" onclick="changeMonthlyCalOffset(-1)" title="Previous Month">
-            ‹ Prev
-          </button>
-          
-          <select id="monthlyCalSelect" class="monthly-cal-select" onchange="onMonthlySelectChange(this.value)">
-            <!-- Populated dynamically with 8 months: Month -1 to +6 -->
-          </select>
-
-          <button type="button" class="btn btn-outline btn-sm" onclick="jumpToLiveMonth()" title="Jump to Current Month">
-            Today
-          </button>
-
-          <button type="button" class="btn btn-outline btn-sm" id="calNextMonthBtn" onclick="changeMonthlyCalOffset(1)" title="Next Month">
-            Next ›
-          </button>
+        <div style="display:flex; align-items:center; gap:0.4rem;">
+          <button type="button" class="btn btn-outline btn-sm" id="calPrevMonthBtn" onclick="changeMonthlyCalOffset(-1)">‹ Prev</button>
+          <select id="monthlyCalSelect" class="monthly-cal-select" onchange="onMonthlySelectChange(this.value)"></select>
+          <button type="button" class="btn btn-outline btn-sm" onclick="jumpToLiveMonth()">Today</button>
+          <button type="button" class="btn btn-outline btn-sm" id="calNextMonthBtn" onclick="changeMonthlyCalOffset(1)">Next ›</button>
         </div>
       </div>
 
-      <!-- Color Legend Bar -->
-      <div class="monthly-cal-legend">
-        <span class="monthly-legend-pill tab-avail-green">
-          <span>🟢 Available</span> (Main & Top Floor Vacant)
-        </span>
-        <span class="monthly-legend-pill tab-booked-red">
-          <span>🔴 Booked</span> (Main Venue / Top Floor Occupied)
-        </span>
-        <span class="monthly-legend-pill tab-parking-red">
-          <span>🚗 Parking Booked</span> (Area Reserved)
-        </span>
-      </div>
-
-      <!-- Weekdays Header (Sun - Sat) -->
-      <div class="monthly-grid" style="margin-top: 1rem;">
+      <div class="monthly-grid" style="margin-bottom: 0.5rem;">
         <div class="monthly-weekday-label weekend">Sun</div>
         <div class="monthly-weekday-label">Mon</div>
         <div class="monthly-weekday-label">Tue</div>
@@ -172,9 +148,7 @@
         <div class="monthly-weekday-label weekend">Sat</div>
       </div>
 
-      <!-- Days Grid Rendered via JavaScript -->
       <div class="monthly-grid" id="monthlyCalendarGrid"></div>
-
     </section>
     
     <!-- BOOKINGS & TRANSACTION LEDGER -->
@@ -1574,6 +1548,51 @@ function getDayBookingEvaluation(isoDate) {
       
       return s;
     }
+    window.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("matrixDate").value = today;
+  document.getElementById("bookStartDate").value = today;
+
+  db = DataStore.getLocal();
+  populateSpaceDropdown();
+  initMonthlyCalendar(); // Initializes 8-month selector
+  renderApp();
+
+  syncWithSheets(false);
+});
+
+async function syncWithSheets(isManual = false) {
+  const dot = document.getElementById("syncDot");
+  const statusText = document.getElementById("syncStatusText");
+  const tsEl = document.getElementById("syncTimestamp");
+
+  dot.className = "sync-dot syncing";
+  statusText.innerText = "Syncing with Google Sheets...";
+
+  const res = await DataStore.fetchFromSheets();
+
+  if (res.success) {
+    db = res.data;
+    dot.className = "sync-dot";
+    statusText.innerText = "✓ Live Sheet Sync Active";
+    tsEl.innerText = "Updated " + (res.timestamp || new Date().toLocaleTimeString());
+    populateSpaceDropdown();
+    renderApp(); // Automatically updates the calendar
+    if (isManual) showToast("Synced with Google Sheets!");
+  } else {
+    dot.className = res.isConfigured ? "sync-dot offline" : "sync-dot";
+    statusText.innerText = res.message;
+    if (isManual) showToast(res.message);
+  }
+}
+
+function renderApp() {
+  renderKPIs();
+  renderSlotMatrix();
+  renderSpacesList();
+  renderMonthlyCalendar(); // Re-evaluates daily statuses from Google Sheet data
+  renderBookingsTable();
+}
   </script>
   <script src="system-logic.js"></script>
 </body>
