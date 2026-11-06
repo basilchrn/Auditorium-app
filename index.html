@@ -7,769 +7,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f172a">
   <title>Auditorium & Venue Management System</title>
-  <style>
-    /* ZERO EXTERNAL DEPENDENCIES - STANDALONE SYSTEM CSS */
-    :root {
-      --bg-main: #0f172a;
-      --bg-surface: #1e293b;
-      --bg-card: #1e293b;
-      --bg-card-subtle: #334155;
-      --border-color: #334155;
-      --border-focus: #38bdf8;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --primary: #38bdf8;
-      --primary-hover: #0284c7;
-      --accent-gold: #fbbf24;
-      --accent-gold-bg: rgba(251, 191, 36, 0.12);
-      --success: #10b981;
-      --success-bg: rgba(16, 185, 129, 0.12);
-      --danger: #f43f5e;
-      --danger-bg: rgba(244, 63, 94, 0.12);
-      --hold: #f59e0b;
-      --hold-bg: rgba(245, 158, 11, 0.15);
-      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: var(--font-stack);
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      line-height: 1.5;
-      padding-bottom: 84px; /* Space for mobile bottom bar */
-      overflow-x: hidden;
-    }
-
-    /* Container */
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-
-    /* Header */
-    header {
-      background-color: rgba(30, 41, 59, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.85rem 1rem;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .brand-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .brand-badge {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 0.15rem 0.45rem;
-      border-radius: var(--radius-full);
-      background-color: var(--primary);
-      color: #0f172a;
-      text-transform: uppercase;
-    }
-
-    .role-switcher {
-      display: inline-flex;
-      background: var(--bg-card-subtle);
-      border-radius: var(--radius-full);
-      padding: 3px;
-      border: 1px solid var(--border-color);
-    }
-
-    .role-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .role-btn.active {
-      background: var(--primary);
-      color: #0f172a;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .btn-group-header {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      font-size: 0.82rem;
-      font-weight: 700;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-md);
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      min-height: 38px;
-    }
-
-    .btn-primary {
-      background-color: var(--primary);
-      color: #0f172a;
-    }
-    .btn-primary:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .btn-gold {
-      background-color: var(--accent-gold);
-      color: #0f172a;
-    }
-
-    .btn-secondary {
-      background-color: var(--bg-card-subtle);
-      color: var(--text-main);
-      border-color: var(--border-color);
-    }
-    .btn-secondary:hover {
-      background-color: #475569;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border-color: var(--border-color);
-      color: var(--text-main);
-    }
-    .btn-outline:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-danger {
-      background-color: var(--danger-bg);
-      color: var(--danger);
-      border-color: rgba(244, 63, 94, 0.3);
-    }
-
-    .btn-sm {
-      padding: 0.25rem 0.55rem;
-      font-size: 0.72rem;
-      min-height: 28px;
-    }
-
-    /* KPI Banner */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      margin: 1.25rem 0;
-    }
-
-    @media (min-width: 768px) {
-      .kpi-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
-    .kpi-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .kpi-label {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .kpi-value {
-      font-size: 1.35rem;
-      font-weight: 800;
-      margin-top: 0.25rem;
-    }
-
-    /* Section Headers */
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .section-title h2 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-    }
-
-    /* Calendar & Slot Matrix */
-    .calendar-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .cal-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .cal-date-picker-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .cal-date-picker-wrap input[type="date"] {
-      background: var(--bg-card-subtle);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.4rem 0.65rem;
-      border-radius: var(--radius-md);
-      font-family: inherit;
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-
-    .slot-legend {
-      display: flex;
-      gap: 0.85rem;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: var(--radius-full);
-      display: inline-block;
-    }
-    .dot-avail { background: var(--success); }
-    .dot-hold { background: var(--hold); }
-    .dot-booked { background: var(--danger); }
-
-    /* Visual Matrix Grid */
-    .matrix-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0.5rem;
-      margin-top: 0.5rem;
-      overflow-x: auto;
-      display: block;
-    }
-
-    @media (min-width: 640px) {
-      .matrix-table {
-        display: table;
-      }
-    }
-
-    .matrix-th {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-align: left;
-      padding: 0.5rem;
-      font-weight: 700;
-    }
-
-    .matrix-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 0.75rem;
-      min-width: 170px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .matrix-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-1px);
-    }
-
-    .matrix-card.is-available {
-      border-left: 4px solid var(--success);
-    }
-
-    .matrix-card.is-hold {
-      border-left: 4px solid var(--hold);
-      background: rgba(245, 158, 11, 0.05);
-    }
-
-    .matrix-card.is-booked {
-      border-left: 4px solid var(--danger);
-      background: rgba(244, 63, 94, 0.05);
-    }
-
-    .slot-badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 800;
-      padding: 0.15rem 0.4rem;
-      border-radius: var(--radius-sm);
-      text-transform: uppercase;
-    }
-
-    .badge-morn { background: #0284c7; color: #fff; }
-    .badge-eve { background: #6366f1; color: #fff; }
-
-    /* Spaces Grid */
-    .spaces-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .spaces-grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      }
-    }
-
-    .venue-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1.15rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
-
-    .venue-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.5rem;
-    }
-
-    .venue-name {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .venue-group-tag {
-      font-size: 0.65rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: var(--radius-full);
-      background: var(--bg-card-subtle);
-      color: var(--text-muted);
-      font-weight: 700;
-      font-family: monospace;
-    }
-
-    .venue-info {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .venue-conflict-warning {
-      font-size: 0.7rem;
-      color: var(--accent-gold);
-      background: var(--accent-gold-bg);
-      padding: 0.4rem 0.6rem;
-      border-radius: var(--radius-sm);
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    /* Modal Sheet (Responsive iOS/Android Bottom Sheet + Desktop Modal) */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(4px);
-      z-index: 50;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-sheet {
-      background: var(--bg-surface);
-      width: 100%;
-      max-width: 680px;
-      max-height: 90vh;
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      border: 1px solid var(--border-color);
-      border-bottom: none;
-      overflow-y: auto;
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      padding: 1.25rem;
-      box-shadow: var(--shadow-lg);
-    }
-
-    @media (min-width: 640px) {
-      .modal-overlay {
-        align-items: center;
-        padding: 1rem;
-      }
-      .modal-sheet {
-        border-radius: var(--radius-lg);
-        border-bottom: 1px solid var(--border-color);
-        transform: translateY(20px);
-        max-height: 85vh;
-      }
-    }
-
-    .modal-overlay.open .modal-sheet {
-      transform: translateY(0);
-    }
-
-    .sheet-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--text-dim);
-      border-radius: var(--radius-full);
-      margin: -0.5rem auto 0.75rem auto;
-      display: block;
-    }
-
-    @media (min-width: 640px) {
-      .sheet-handle { display: none; }
-    }
-
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .modal-head h3 {
-      font-size: 1.1rem;
-      font-weight: 800;
-    }
-
-    .close-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    /* Forms */
-    .form-section {
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 0.85rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .form-section-title {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.65rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.65rem;
-      margin-bottom: 0.65rem;
-    }
-
-    @media (min-width: 520px) {
-      .form-row-2 {
-        grid-template-columns: 1fr 1fr;
-      }
-      .form-row-3 {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    input, select, textarea {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      color: var(--text-main);
-      padding: 0.5rem 0.65rem;
-      font-size: 0.82rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--border-focus);
-    }
-
-    /* Toggle switches */
-    .toggle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.4rem 0;
-      border-bottom: 1px dashed var(--border-color);
-    }
-    .toggle-row:last-child { border-bottom: none; }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 38px;
-      height: 22px;
-    }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: var(--bg-card-subtle);
-      transition: .25s;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-color);
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 14px;
-      width: 14px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .25s;
-      border-radius: 50%;
-    }
-    input:checked + .slider { background-color: var(--primary); }
-    input:checked + .slider:before { transform: translateX(16px); }
-
-    /* Ledger Summary Box */
-    .ledger-box {
-      background: #090d16;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 0.75rem;
-      margin-top: 0.75rem;
-      font-size: 0.78rem;
-    }
-
-    .ledger-line {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.2rem 0;
-      color: var(--text-muted);
-    }
-
-    .ledger-line.total {
-      border-top: 1px solid var(--border-color);
-      margin-top: 0.4rem;
-      padding-top: 0.4rem;
-      font-weight: 800;
-      font-size: 0.95rem;
-      color: var(--text-main);
-    }
-
-    .ledger-line.advance {
-      color: var(--accent-gold);
-      font-weight: 700;
-    }
-
-    /* ID Proof Preview Dropzone */
-    .id-proof-card {
-      border: 1px dashed var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 0.75rem;
-      text-align: center;
-      background: var(--bg-card);
-    }
-
-    .id-preview-img {
-      width: 100%;
-      max-height: 140px;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-      margin-top: 0.5rem;
-      border: 1px solid var(--border-color);
-      display: none;
-    }
-
-    /* Table */
-    .table-responsive {
-      overflow-x: auto;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.78rem;
-    }
-
-    th {
-      background: var(--bg-card-subtle);
-      color: var(--text-muted);
-      font-weight: 700;
-      text-align: left;
-      padding: 0.65rem 0.85rem;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-    }
-
-    td {
-      padding: 0.65rem 0.85rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    tr:last-child td { border-bottom: none; }
-
-    /* Mobile Bottom Navigation Bar */
-    .mobile-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(30, 41, 59, 0.96);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      padding: 0.5rem 0.25rem;
-      z-index: 40;
-    }
-
-    .nav-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.15rem;
-      font-size: 0.65rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .nav-btn.active {
-      color: var(--primary);
-    }
-
-    .nav-icon {
-      font-size: 1.15rem;
-    }
-
-    /* Custom Notification Banner */
-    .toast-banner {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: var(--bg-surface);
-      border: 1px solid var(--primary);
-      padding: 0.65rem 1rem;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-lg);
-      font-size: 0.8rem;
-      display: none;
-      z-index: 60;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  <!-- MODULAR STYLESHEET (NO EXTERNAL CDNS) -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -792,8 +31,8 @@
       </div>
 
       <div class="btn-group-header">
-        <button type="button" class="btn btn-outline btn-sm" onclick="exportDataJSON()" title="Export JSON backup">
-          💾 Backup
+        <button type="button" class="btn btn-outline btn-sm" onclick="syncWithSheets(true)" title="Force live sync with Google Sheet">
+          🔄 Sync
         </button>
         <button type="button" class="btn btn-gold btn-sm" id="topBookBtn" onclick="openNewBookingModal()">
           + New Booking
@@ -805,6 +44,15 @@
   <!-- MAIN BODY -->
   <main class="container">
     
+    <!-- SYNC & STATUS BAR -->
+    <div class="sync-bar">
+      <div class="sync-status">
+        <span class="sync-dot" id="syncDot"></span>
+        <span id="syncStatusText">Connecting to Google Sheet...</span>
+      </div>
+      <div style="font-size: 0.7rem; color: var(--text-dim);" id="syncTimestamp">--</div>
+    </div>
+
     <!-- KPI STATS (Admin & Desk) -->
     <div class="kpi-grid" id="kpiSection">
       <div class="kpi-card">
@@ -842,7 +90,7 @@
 
       <div class="section-title">
         <h2>Live Slot Availability Matrix</h2>
-        <span style="font-size:0.75rem; color:var(--text-muted);">Slots: Morn (10-16) & Eve (17-22)</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Morning (10-16h) & Evening (17-22h)</span>
       </div>
 
       <div class="matrix-table" id="matrixGrid">
@@ -927,7 +175,7 @@
       <div class="modal-head">
         <div>
           <h3 id="bookingModalTitle">New Venue Reservation</h3>
-          <p style="font-size:0.7rem; color:var(--text-muted);">Conflict checks & dynamic rate evaluation</p>
+          <p style="font-size:0.7rem; color:var(--text-muted);">Conflict checks & live dynamic rate evaluation</p>
         </div>
         <button type="button" class="close-btn" onclick="closeModal('bookingModal')">&times;</button>
       </div>
@@ -938,7 +186,6 @@
         <div class="form-section">
           <div class="form-section-title">
             <span>1. Space & Slot Allocation</span>
-            <span id="conflictNotice" style="font-size:0.65rem; color:var(--danger); display:none;">⚠️ Mutual Exclusion Conflict</span>
           </div>
 
           <div class="form-row form-row-2">
@@ -1152,7 +399,7 @@
         </div>
 
         <button type="submit" id="submitBookingBtn" class="btn btn-gold" style="width:100%; font-size:0.95rem; padding:0.75rem;">
-          ✓ Authorize & Save Reservation
+          ✓ Authorize & Push to Google Sheet
         </button>
       </form>
     </div>
@@ -1202,7 +449,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width:100%;">Create Space</button>
+        <button type="submit" id="submitSpaceBtn" class="btn btn-primary" style="width:100%;">Create Space & Save to Sheet</button>
       </form>
     </div>
   </div>
@@ -1225,129 +472,60 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT APPLICATION CORE (ZERO DEPENDENCIES) -->
+  <!-- APPLICATION CONTROLLER & SCRIPTS -->
+  <script src="data-sync.js"></script>
   <script>
-    /**
-     * AUDITORIUM & VENUE MANAGEMENT SYSTEM
-     * Standalone Vanilla JS Engine — Zero external CDN reliance.
-     */
-
-    // LOCAL STORAGE KEYS
-    const STORAGE_KEY_SPACES = "AUDITORIUM_SPACES_V1";
-    const STORAGE_KEY_BOOKINGS = "AUDITORIUM_BOOKINGS_V1";
-    const STORAGE_KEY_CONFIG = "AUDITORIUM_CONFIG_V1";
-
-    // CURRENT ROLE STATE: 'admin' | 'desk' | 'customer'
     let currentRole = 'admin';
-
-    // DEFAULT DYNAMIC PRICING CONFIG (Editable & expandable via Sheet / Settings)
-    const DEFAULT_CONFIG = {
-      RATE_FULL_MORN: 15000,
-      RATE_FULL_EVE: 15000,
-      RATE_FULL_SAME_DAY_BOTH: 40000,
-      RATE_FULL_EVE_NEXT_MORN: 25000,
-      RATE_FULL_TWO_MORNINGS: 35000,
-      RATE_FULL_TWO_EVENINGS: 35000,
-      RATE_TOP_PER_SLOT: 5000,
-      PARKING_MIN_FEE: 4000,
-      PARKING_PER_SQFT: 200,
-      WASTE_DISPOSAL_FEE: 1000,
-      CAUTION_DEPOSIT_FULL: 10000,
-      CAUTION_DEPOSIT_TOP: 0,
-      ADVANCE_PCT_FULL: 50,
-      ADVANCE_PCT_TOP: 100,
-      HOLD_HOURS_FULL: 48,
-      HOLD_HOURS_TOP: 24,
-      GST_PERCENT: 18,
-      EXTRA_PAX_SURCHARGE_PER_HEAD: 200
-    };
-
-    // DEFAULT SPACES PRE-SEED (Can be fully modified, added or removed)
-    const DEFAULT_SPACES = [
-      {
-        space_id: "SP-MAIN-FULL",
-        name: "Full Auditorium (Ground + Top Floor)",
-        capacity: 500,
-        conflict_group: "GRP_MAIN_AUDITORIUM",
-        is_composite: true,
-        base_rate: 15000,
-        description: "Complete venue with 500 Pax capacity. Locks Top Floor automatically."
-      },
-      {
-        space_id: "SP-TOP-SOLO",
-        name: "First / Top Floor Only",
-        capacity: 100,
-        conflict_group: "GRP_MAIN_AUDITORIUM",
-        is_composite: false,
-        base_rate: 5000,
-        description: "Mini space with 100 Pax. No combined package. Locks Full Venue automatically."
-      },
-      {
-        space_id: "SP-PARKING-ONLY",
-        name: "Parking Area (Standalone Event)",
-        capacity: 300,
-        conflict_group: "GRP_PARKING_STANDALONE",
-        is_composite: false,
-        base_rate: 4000,
-        description: "Open paved parking area for outdoor expos, flea markets or food stalls."
-      }
-    ];
-
-    // IN-MEMORY DATABASE STATE
     let db = {
       config: { ...DEFAULT_CONFIG },
-      spaces: [],
+      spaces: [ ...DEFAULT_SPACES ],
       bookings: []
     };
 
-    // INITIALIZATION
     window.addEventListener("DOMContentLoaded", () => {
-      loadLocalData();
-
-      // Set target date in matrix to today
       const today = new Date().toISOString().split("T")[0];
       document.getElementById("matrixDate").value = today;
       document.getElementById("bookStartDate").value = today;
 
+      // Initial load from local cache + attempt live sync
+      const cached = DataStore.getLocal();
+      db = cached;
       populateSpaceDropdown();
       renderApp();
+
+      syncWithSheets(false);
     });
 
-    function loadLocalData() {
-      try {
-        const savedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
-        db.config = savedConfig ? JSON.parse(savedConfig) : { ...DEFAULT_CONFIG };
+    async function syncWithSheets(isManual = false) {
+      const dot = document.getElementById("syncDot");
+      const statusText = document.getElementById("syncStatusText");
+      const tsEl = document.getElementById("syncTimestamp");
 
-        const savedSpaces = localStorage.getItem(STORAGE_KEY_SPACES);
-        db.spaces = savedSpaces ? JSON.parse(savedSpaces) : [ ...DEFAULT_SPACES ];
+      dot.className = "sync-dot syncing";
+      statusText.innerText = "Syncing with Google Sheets...";
 
-        const savedBookings = localStorage.getItem(STORAGE_KEY_BOOKINGS);
-        db.bookings = savedBookings ? JSON.parse(savedBookings) : [];
-      } catch (e) {
-        console.error("Local data load failed:", e);
-        db.config = { ...DEFAULT_CONFIG };
-        db.spaces = [ ...DEFAULT_SPACES ];
-        db.bookings = [];
+      const res = await DataStore.fetchFromSheets();
+
+      if (res.success) {
+        db = res.data;
+        dot.className = "sync-dot";
+        statusText.innerText = "✓ Live Sheet Sync Active";
+        tsEl.innerText = "Updated " + (res.timestamp || new Date().toLocaleTimeString());
+        populateSpaceDropdown();
+        renderApp();
+        if (isManual) showToast("Synced with Google Sheets!");
+      } else {
+        dot.className = res.isConfigured ? "sync-dot offline" : "sync-dot";
+        statusText.innerText = res.message;
+        if (isManual) showToast(res.message);
       }
     }
 
-    function saveLocalData() {
-      try {
-        localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(db.config));
-        localStorage.setItem(STORAGE_KEY_SPACES, JSON.stringify(db.spaces));
-        localStorage.setItem(STORAGE_KEY_BOOKINGS, JSON.stringify(db.bookings));
-      } catch (e) {
-        console.error("Local data save failed:", e);
-      }
-    }
-
-    // ROLE SWITCHER
     function setRole(role, btnElement) {
       currentRole = role;
       document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("active"));
       btnElement.classList.add("active");
 
-      // UI adjust by role
       const isCustomer = role === 'customer';
       const isAdmin = role === 'admin';
 
@@ -1360,9 +538,12 @@
       renderApp();
     }
 
-    // POPULATE SPACES DROPDOWN
     function populateSpaceDropdown() {
       const select = document.getElementById("bookSpaceSelect");
+      if (!db.spaces || !db.spaces.length) {
+        select.innerHTML = `<option value="">No spaces available</option>`;
+        return;
+      }
       select.innerHTML = db.spaces.map(s => `
         <option value="${s.space_id}">${s.name} (Cap: ${s.capacity} pax)</option>
       `).join("");
@@ -1370,7 +551,6 @@
       onSpaceOrDateChange();
     }
 
-    // MAIN RENDER FUNCTION
     function renderApp() {
       renderKPIs();
       renderSlotMatrix();
@@ -1378,7 +558,6 @@
       renderBookingsTable();
     }
 
-    // RENDER KPI STATS
     function renderKPIs() {
       document.getElementById("kpiSpaces").innerText = db.spaces.length;
       document.getElementById("kpiBookings").innerText = db.bookings.length;
@@ -1390,11 +569,9 @@
       document.getElementById("kpiAdvance").innerText = `₹${totalAdvance.toLocaleString()}`;
     }
 
-    // LIVE SLOT MATRIX RENDERER
     function renderSlotMatrix() {
       const targetDate = document.getElementById("matrixDate").value;
       const grid = document.getElementById("matrixGrid");
-
       if (!targetDate) return;
 
       const slots = [
@@ -1457,9 +634,7 @@
       grid.innerHTML = html;
     }
 
-    // CONFLICT RESOLUTION ENGINE: Checks if slot is occupied or conflicts via group
     function getSlotStatus(space, dateStr, slotCode) {
-      // 1. Direct match on exact space
       const direct = db.bookings.find(b => 
         b.space_id === space.space_id &&
         b.dates.includes(dateStr) &&
@@ -1476,7 +651,6 @@
         };
       }
 
-      // 2. Conflict Group Check: Check if any OTHER space in the same conflict group is booked
       const conflict = db.bookings.find(b => {
         const bookedSpace = db.spaces.find(s => s.space_id === b.space_id);
         if (!bookedSpace) return false;
@@ -1502,7 +676,6 @@
       return { status: "Available", label: "Open to Reserve" };
     }
 
-    // SPACES LIST RENDERER
     function renderSpacesList() {
       const container = document.getElementById("spacesGrid");
       container.innerHTML = db.spaces.map(s => {
@@ -1537,11 +710,10 @@
       }).join("");
     }
 
-    // BOOKINGS TABLE RENDERER
     function renderBookingsTable() {
       const tbody = document.getElementById("bookingsTableBody");
-      if (db.bookings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No reservations recorded in local ledger.</td></tr>`;
+      if (!db.bookings || db.bookings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No reservations recorded in sheet ledger.</td></tr>`;
         return;
       }
 
@@ -1580,7 +752,6 @@
       }).join("");
     }
 
-    // ON SPACE OR DATE CHANGE IN BOOKING MODAL
     function onSpaceOrDateChange() {
       const spaceId = document.getElementById("bookSpaceSelect").value;
       const space = db.spaces.find(s => s.space_id === spaceId);
@@ -1590,9 +761,7 @@
       const cautionToggle = document.getElementById("cautionToggle");
       const cautionInfo = document.getElementById("cautionInfoText");
 
-      // Dynamic package availability based on space rules
       if (space.space_id === "SP-MAIN-FULL") {
-        // Full venue combos
         pkgSelect.innerHTML = `
           <option value="Single_Morn">Single Morning Slot (10-16h) - ₹15,000</option>
           <option value="Single_Eve">Single Evening Slot (17-22h) - ₹15,000</option>
@@ -1605,7 +774,6 @@
         cautionToggle.checked = true;
         cautionInfo.innerText = "Full Venue refundable caution deposit (₹10,000)";
       } else if (space.space_id === "SP-TOP-SOLO") {
-        // First floor solo: no combos allowed
         pkgSelect.innerHTML = `
           <option value="Single_Morn">Single Morning Slot (10-16h) - ₹5,000</option>
           <option value="Single_Eve">Single Evening Slot (17-22h) - ₹5,000</option>
@@ -1614,7 +782,6 @@
         cautionToggle.disabled = true;
         cautionInfo.innerText = "Caution deposit not applicable for First Floor";
       } else {
-        // Dynamically added spaces or parking
         pkgSelect.innerHTML = `
           <option value="Single_Morn">Morning Slot - ₹${space.base_rate.toLocaleString()}</option>
           <option value="Single_Eve">Evening Slot - ₹${space.base_rate.toLocaleString()}</option>
@@ -1627,9 +794,7 @@
       recalcLedger();
     }
 
-    function onSlotPackageChange() {
-      recalcLedger();
-    }
+    function onSlotPackageChange() { recalcLedger(); }
 
     function toggleParkingInput() {
       const isChecked = document.getElementById("parkingToggle").checked;
@@ -1642,7 +807,6 @@
       document.getElementById("upiFields").style.display = mode === "UPI" ? "grid" : "none";
     }
 
-    // CALCULATION & PRICING ENGINE
     function recalcLedger() {
       const spaceId = document.getElementById("bookSpaceSelect").value;
       const space = db.spaces.find(s => s.space_id === spaceId);
@@ -1652,7 +816,6 @@
       const guestPax = parseInt(document.getElementById("bookGuestPax").value) || 0;
       const cfg = db.config;
 
-      // 1. Base Venue Fee
       let venueBase = 0;
       let slotCount = 1;
 
@@ -1674,7 +837,6 @@
         venueBase = space.base_rate * slotCount;
       }
 
-      // 2. Extra Pax Surcharge (+₹200/extra pax)
       let extraPaxCharge = 0;
       const paxNotice = document.getElementById("paxSurchargeNotice");
       if (space.capacity > 0 && guestPax > space.capacity) {
@@ -1685,7 +847,6 @@
         paxNotice.style.display = "none";
       }
 
-      // 3. Parking Levy
       let parkingFee = 0;
       const isParking = document.getElementById("parkingToggle").checked;
       const lineParking = document.getElementById("lineParking");
@@ -1700,7 +861,6 @@
         lineParking.style.display = "none";
       }
 
-      // 4. Waste Disposal Fee
       let wasteFee = 0;
       const isWaste = document.getElementById("wasteToggle").checked;
       const lineWaste = document.getElementById("lineWaste");
@@ -1712,10 +872,8 @@
         lineWaste.style.display = "none";
       }
 
-      // Subtotal before tax
       const subtotal = venueBase + extraPaxCharge + parkingFee + wasteFee;
 
-      // 5. GST (18%)
       let gstAmount = 0;
       const isGst = document.getElementById("gstToggle").checked;
       const lineGst = document.getElementById("lineGst");
@@ -1727,7 +885,6 @@
         lineGst.style.display = "none";
       }
 
-      // 6. Caution Deposit
       let cautionDeposit = 0;
       const isCaution = document.getElementById("cautionToggle").checked;
       const lineCaution = document.getElementById("lineCaution");
@@ -1740,19 +897,15 @@
       }
 
       const grandTotal = subtotal + gstAmount + cautionDeposit;
-
-      // Advance Percentage: 50% for Full Venue, 100% for Top Floor
       const advPct = space.space_id === "SP-MAIN-FULL" ? (cfg.ADVANCE_PCT_FULL || 50) : (cfg.ADVANCE_PCT_TOP || 100);
       const advRequired = Math.round(grandTotal * (advPct / 100));
 
-      // Update Ledger DOM
       document.getElementById("leadVenueBase").innerText = `₹${venueBase.toLocaleString()}`;
       document.getElementById("leadExtraPax").innerText = `+₹${extraPaxCharge.toLocaleString()}`;
       document.getElementById("leadGrandTotal").innerText = `₹${grandTotal.toLocaleString()}`;
       document.getElementById("leadAdvancePct").innerText = advPct;
       document.getElementById("leadAdvanceReq").innerText = `₹${advRequired.toLocaleString()}`;
 
-      // Default the advance input if empty
       const payInput = document.getElementById("payAmount");
       if (!payInput.value || payInput.dataset.autoFilled === "true") {
         payInput.value = advRequired;
@@ -1760,7 +913,6 @@
       }
     }
 
-    // MANDATORY ID PROOF FILE HANDLER
     function handleIdProofFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1774,14 +926,12 @@
       reader.readAsDataURL(file);
     }
 
-    // ZERO-DEPENDENCY OFFLINE TEST ID GENERATOR (Using standard HTML5 Canvas)
     function generateStandaloneTestId() {
       const canvas = document.createElement("canvas");
       canvas.width = 320;
       canvas.height = 190;
       const ctx = canvas.getContext("2d");
 
-      // Draw ID Card
       ctx.fillStyle = "#1e293b";
       ctx.fillRect(0, 0, 320, 190);
 
@@ -1806,7 +956,6 @@
       ctx.font = "bold 11px monospace";
       ctx.fillText("DOC REF: IN-VERIFIED-KYC-902", 20, 135);
 
-      // Official Stamp
       ctx.strokeStyle = "#10b981";
       ctx.lineWidth = 2;
       ctx.strokeRect(210, 130, 95, 40);
@@ -1822,8 +971,7 @@
       showToast("Standalone Test ID Generated!");
     }
 
-    // SUBMIT BOOKING HANDLER
-    function handleBookingSubmit(event) {
+    async function handleBookingSubmit(event) {
       event.preventDefault();
 
       const idData = document.getElementById("idProofBase64").value;
@@ -1838,8 +986,8 @@
       const startDate = document.getElementById("bookStartDate").value;
       const status = document.getElementById("bookStatusSelect").value;
       const advancePaid = parseFloat(document.getElementById("payAmount").value) || 0;
+      const guestPax = parseInt(document.getElementById("bookGuestPax").value) || 0;
 
-      // Determine date list & slot codes
       let dates = [startDate];
       let slots = ["MORN"];
       let nextDate = getNextDay(startDate);
@@ -1851,7 +999,6 @@
       else if (pkg === "Two_Mornings") { dates = [startDate, nextDate]; slots = ["MORN"]; }
       else if (pkg === "Two_Evenings") { dates = [startDate, nextDate]; slots = ["EVE"]; }
 
-      // Conflict validation check before saving
       for (const d of dates) {
         for (const s of slots) {
           const check = getSlotStatus(space, d, s);
@@ -1862,55 +1009,95 @@
         }
       }
 
-      // Compute Hold Expiration
-      let holdExpires = "";
-      if (status === "Tentative_Hold") {
-        const holdHours = space.space_id === "SP-MAIN-FULL" ? (db.config.HOLD_HOURS_FULL || 48) : (db.config.HOLD_HOURS_TOP || 24);
-        const exp = new Date(Date.now() + holdHours * 3600 * 1000);
-        holdExpires = exp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " (" + holdHours + "h)";
-      }
-
-      // Grand total extraction
       const totalStr = document.getElementById("leadGrandTotal").innerText.replace(/[^0-9]/g, "");
       const grandTotal = parseInt(totalStr) || 0;
+      const venueBase = parseInt(document.getElementById("leadVenueBase").innerText.replace(/[^0-9]/g, "")) || 0;
+      const extraPax = parseInt(document.getElementById("leadExtraPax").innerText.replace(/[^0-9]/g, "")) || 0;
+      const parkingFee = parseInt(document.getElementById("leadParking").innerText.replace(/[^0-9]/g, "")) || 0;
+      const wasteFee = parseInt(document.getElementById("leadWaste").innerText.replace(/[^0-9]/g, "")) || 0;
+      const cautionDeposit = parseInt(document.getElementById("leadCaution").innerText.replace(/[^0-9]/g, "")) || 0;
+      const gstAmount = parseInt(document.getElementById("leadGst").innerText.replace(/[^0-9]/g, "")) || 0;
+      const subtotal = venueBase + extraPax + parkingFee + wasteFee;
+      const advanceReq = parseInt(document.getElementById("leadAdvanceReq").innerText.replace(/[^0-9]/g, "")) || 0;
 
-      const newBooking = {
-        booking_id: "AUD-" + Date.now().toString().slice(-6),
-        created_at: new Date().toISOString(),
-        space_id: spaceId,
-        slot_package: pkg,
-        slot_package_name: document.getElementById("bookPackageSelect").selectedOptions[0].text,
-        dates: dates,
-        slots: slots,
-        tenant_name: document.getElementById("tName").value,
-        tenant_phone: document.getElementById("tPhone").value,
-        tenant_alt_phone: document.getElementById("tAltPhone").value,
-        tenant_purpose: document.getElementById("tPurpose").value,
-        tenant_org: document.getElementById("tOrg").value,
-        suggested_by: document.getElementById("tSuggestedBy").value,
-        remarks: document.getElementById("tRemarks").value,
-        id_proof_base64: idData,
-        grand_total: grandTotal,
-        advance_paid: advancePaid,
-        status: status,
-        hold_expires_time: holdExpires,
-        payment_mode: document.getElementById("payMode").value,
-        upi_ref: document.getElementById("upiUtr").value || ""
+      const bookingId = "AUD-" + Date.now().toString().slice(-6);
+
+      const bookingPayload = {
+        booking: {
+          booking_id: bookingId,
+          space_id: spaceId,
+          slot_package: pkg,
+          dates: dates,
+          slots: slots,
+          expected_pax: guestPax,
+          base_venue_fee: venueBase,
+          extra_pax_fee: extraPax,
+          parking_sqft: parseFloat(document.getElementById("parkingSqft").value) || 0,
+          parking_fee: parkingFee,
+          waste_fee: wasteFee,
+          caution_deposit: cautionDeposit,
+          taxable_subtotal: subtotal,
+          gst_amount: gstAmount,
+          grand_total: grandTotal,
+          advance_required: advanceReq,
+          advance_paid: advancePaid,
+          booking_status: status
+        },
+        tenant: {
+          full_name: document.getElementById("tName").value,
+          phone_primary: document.getElementById("tPhone").value,
+          phone_alternate: document.getElementById("tAltPhone").value,
+          event_purpose: document.getElementById("tPurpose").value,
+          organization_name: document.getElementById("tOrg").value,
+          suggested_by: document.getElementById("tSuggestedBy").value,
+          special_remarks: document.getElementById("tRemarks").value,
+          id_proof_base64: idData
+        },
+        payment: {
+          payment_mode: document.getElementById("payMode").value,
+          amount_paid: advancePaid,
+          upi_payer_name: document.getElementById("upiPayerName").value,
+          upi_id_vpa: document.getElementById("upiVpa").value,
+          upi_ref_utr: document.getElementById("upiUtr").value
+        }
       };
 
-      db.bookings.unshift(newBooking);
-      saveLocalData();
+      const btn = document.getElementById("submitBookingBtn");
+      btn.disabled = true;
+      btn.innerText = "Transmitting to Google Sheet...";
 
-      closeModal("bookingModal");
-      document.getElementById("bookingForm").reset();
-      document.getElementById("idProofBase64").value = "";
-      document.getElementById("idImagePreview").style.display = "none";
+      try {
+        const res = await DataStore.postToSheets("create_booking", bookingPayload);
 
-      showToast(`Reservation ${newBooking.booking_id} saved successfully!`);
-      renderApp();
+        // Optimistically update local view
+        const localBooking = {
+          ...bookingPayload.booking,
+          tenant_name: bookingPayload.tenant.full_name,
+          tenant_phone: bookingPayload.tenant.phone_primary,
+          slot_package_name: document.getElementById("bookPackageSelect").selectedOptions[0].text,
+          id_proof_url: res.id_drive_url || idData
+        };
+        db.bookings.unshift(localBooking);
+        DataStore.saveLocal(db);
+
+        closeModal("bookingModal");
+        document.getElementById("bookingForm").reset();
+        document.getElementById("idProofBase64").value = "";
+        document.getElementById("idImagePreview").style.display = "none";
+
+        showToast(`Reservation ${bookingId} synced to Google Sheet!`);
+        renderApp();
+
+        // Background refresh to catch exact timestamps
+        syncWithSheets(false);
+      } catch (err) {
+        alert("Error saving reservation to Google Sheet: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "✓ Authorize & Push to Google Sheet";
+      }
     }
 
-    // INSPECT BOOKING MODAL
     function inspectBooking(bookingId) {
       const b = db.bookings.find(i => i.booking_id === bookingId);
       if (!b) return;
@@ -1928,7 +1115,7 @@
             </span>
           </div>
           <div style="font-size:0.8rem; font-weight:700; margin-top:2px;">${space ? space.name : b.space_id}</div>
-          <div style="font-size:0.7rem; color:var(--text-muted);">Dates: ${b.dates.join(", ")} | Package: ${b.slot_package_name}</div>
+          <div style="font-size:0.7rem; color:var(--text-muted);">Dates: ${b.dates.join(", ")} | Package: ${b.slot_package_name || b.slot_package}</div>
         </div>
 
         <div style="margin-bottom:0.75rem;">
@@ -1940,22 +1127,23 @@
 
         <div style="margin-bottom:0.75rem;">
           <label>GOVERNMENT ID PROOF</label>
-          ${b.id_proof_base64 ? `
-            <img src="${b.id_proof_base64}" style="width:100%; max-height:160px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-top:4px;">
+          ${b.id_proof_url ? `
+            <a href="${b.id_proof_url}" target="_blank">
+              <img src="${b.id_proof_url}" style="width:100%; max-height:160px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-top:4px;">
+            </a>
           ` : '<p style="color:var(--text-dim); font-size:0.75rem;">No ID uploaded</p>'}
         </div>
 
         <div class="ledger-box" style="margin-bottom:0.75rem;">
           <div class="ledger-line"><span>Grand Total:</span><b>₹${Number(b.grand_total).toLocaleString()}</b></div>
-          <div class="ledger-line" style="color:var(--success);"><span>Advance Paid (${b.payment_mode || 'Cash'}):</span><b>₹${Number(b.advance_paid).toLocaleString()}</b></div>
-          ${b.upi_ref ? `<div class="ledger-line" style="font-size:0.7rem;"><span>UPI UTR:</span><b>${b.upi_ref}</b></div>` : ''}
+          <div class="ledger-line" style="color:var(--success);"><span>Advance Paid:</span><b>₹${Number(b.advance_paid).toLocaleString()}</b></div>
           <div class="ledger-line total" style="color:var(--accent-gold);"><span>Outstanding Balance:</span><span>₹${balance.toLocaleString()}</span></div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:0.5rem;">
           ${balance > 0 ? `
             <button type="button" class="btn btn-primary" onclick="settleBalanceDirect('${b.booking_id}', ${balance})">
-              Settle Balance (₹${balance.toLocaleString()})
+              Settle Balance (₹${balance.toLocaleString()}) via Sheet
             </button>
           ` : `
             <div style="text-align:center; padding:0.5rem; background:var(--success-bg); color:var(--success); font-weight:700; border-radius:var(--radius-md); font-size:0.8rem;">
@@ -1974,50 +1162,44 @@
       openModal("tenantInspectModal");
     }
 
-    function settleBalanceDirect(bookingId, amount) {
-      const b = db.bookings.find(i => i.booking_id === bookingId);
-      if (!b) return;
-      b.advance_paid = Number(b.advance_paid) + amount;
-      b.status = "Confirmed";
-      saveLocalData();
-      showToast("Balance payment logged!");
-      renderApp();
-      inspectBooking(bookingId);
+    async function settleBalanceDirect(bookingId, amount) {
+      try {
+        await DataStore.postToSheets("settle_payment", {
+          booking_id: bookingId,
+          amount_paid: amount,
+          payment_mode: "Cash",
+          collected_by: "Admin Desk"
+        });
+        showToast("Settlement saved to Google Sheet!");
+        closeModal("tenantInspectModal");
+        await syncWithSheets(false);
+      } catch (err) {
+        alert("Payment settlement failed: " + err.message);
+      }
     }
 
-    // CANCELLATION & DISCRETIONARY REFUND WORKFLOW
-    function cancelReservationPrompt(bookingId) {
+    async function cancelReservationPrompt(bookingId) {
       const b = db.bookings.find(i => i.booking_id === bookingId);
       if (!b) return;
 
       const confirmCancel = confirm(`Are you sure you want to cancel booking ${b.booking_id}?`);
       if (!confirmCancel) return;
 
-      // Check if slot was rebooked by another tenant
-      const isRebooked = db.bookings.some(other => 
-        other.booking_id !== b.booking_id &&
-        other.space_id === b.space_id &&
-        other.dates.some(d => b.dates.includes(d)) &&
-        other.status === "Confirmed"
-      );
+      try {
+        const res = await DataStore.postToSheets("cancel_booking", {
+          booking_id: bookingId,
+          discretionary_refund_status: "Withheld_Awaiting_Formal_Request"
+        });
 
-      if (isRebooked) {
-        alert("The cancelled slot has been availed by another booking. 100% full refund is authorized.");
-        b.refund_status = "Full_Refund_Rebooked";
-      } else {
-        alert("Slot remains vacant. Advance is currently withheld. Discretionary refund can be processed on formal request.");
-        b.refund_status = "Withheld_Awaiting_Request";
+        alert(`Cancellation recorded in Google Sheet. Refund status: ${res.refund_status}`);
+        closeModal("tenantInspectModal");
+        await syncWithSheets(false);
+      } catch (err) {
+        alert("Cancellation failed: " + err.message);
       }
-
-      b.status = "Cancelled";
-      saveLocalData();
-      closeModal("tenantInspectModal");
-      renderApp();
-      showToast("Reservation marked as Cancelled.");
     }
 
-    // ADD NEW SPACE (EXPANSION PROVISION)
-    function handleCreateSpace(event) {
+    async function handleCreateSpace(event) {
       event.preventDefault();
       const name = document.getElementById("newSpaceName").value.trim();
       const cap = parseInt(document.getElementById("newSpaceCapacity").value) || 100;
@@ -2025,37 +1207,38 @@
       const group = document.getElementById("newSpaceConflictGroup").value.trim().toUpperCase();
       const desc = document.getElementById("newSpaceDesc").value.trim();
 
-      const newId = "SP-EXP-" + Date.now().toString().slice(-4);
-      db.spaces.push({
-        space_id: newId,
-        name: name,
-        capacity: cap,
-        conflict_group: group,
-        base_rate: rate,
-        description: desc || "Additional venue space"
-      });
+      const btn = document.getElementById("submitSpaceBtn");
+      btn.disabled = true;
+      btn.innerText = "Appending to Spaces Sheet...";
 
-      saveLocalData();
-      populateSpaceDropdown();
-      closeModal("addSpaceModal");
-      showToast(`Venue "${name}" registered successfully!`);
-      renderApp();
+      try {
+        await DataStore.postToSheets("add_space", {
+          name: name,
+          capacity: cap,
+          base_rate: rate,
+          conflict_group: group,
+          is_composite: false,
+          description: desc
+        });
+
+        showToast(`Space "${name}" added to Google Sheet!`);
+        closeModal("addSpaceModal");
+        await syncWithSheets(false);
+      } catch (err) {
+        alert("Failed to add space: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Create Space & Save to Sheet";
+      }
     }
 
-    // MODAL HELPERS
-    function openModal(id) {
-      document.getElementById(id).classList.add("open");
-    }
-    function closeModal(id) {
-      document.getElementById(id).classList.remove("open");
-    }
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
     function openNewBookingModal() {
       openModal("bookingModal");
       onSpaceOrDateChange();
     }
-    function openAddSpaceModal() {
-      openModal("addSpaceModal");
-    }
+    function openAddSpaceModal() { openModal("addSpaceModal"); }
 
     function quickBook(spaceId) {
       document.getElementById("bookSpaceSelect").value = spaceId;
@@ -2074,19 +1257,6 @@
       }
     }
 
-    // EXPORT BACKUP JSON
-    function exportDataJSON() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-      const downloadAnchor = document.createElement("a");
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `auditorium_backup_${new Date().toISOString().split("T")[0]}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast("Backup exported!");
-    }
-
-    // HELPER: UTILS
     function getNextDay(dateString) {
       const d = new Date(dateString);
       d.setDate(d.getDate() + 1);
