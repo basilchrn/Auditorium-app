@@ -855,3 +855,96 @@ tr:last-child td { border-bottom: none; }
   color: #fca5a5;
   border: 1px solid rgba(239, 68, 68, 0.65);
 }
+
+/* Monthly Calendar Grid Layout */
+.monthly-cal-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.monthly-cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.monthly-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.monthly-day-cell {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  min-height: 110px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.monthly-day-cell:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.monthly-day-cell.other-month {
+  opacity: 0.2;
+  pointer-events: none;
+  background: transparent;
+}
+
+.monthly-day-cell.is-today {
+  border-color: var(--primary);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.monthly-day-number {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.cal-tabs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 3px;
+}
+
+/* Status Tabs (Red / Green) */
+.cal-status-tab {
+  font-size: 0.63rem;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.tab-red {
+  background: rgba(239, 68, 68, 0.22);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.6);
+}
+
+.tab-green {
+  background: rgba(16, 185, 129, 0.18);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+}
