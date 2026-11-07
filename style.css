@@ -394,7 +394,7 @@ header {
 }
 
 /* ====================================================
-   MONTHLY CALENDAR VIEW (8-MONTH WINDOW)
+   MONTHLY CALENDAR VIEW (MOBILE & DESKTOP ADAPTIVE)
    ==================================================== */
 .monthly-cal-container {
   background: var(--bg-card);
@@ -403,6 +403,10 @@ header {
   padding: 1.25rem;
   margin-bottom: 2rem;
   box-shadow: var(--shadow-sm);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .monthly-cal-header {
@@ -464,16 +468,13 @@ header {
   font-weight: 700;
 }
 
+/* 7-Column Grid: minmax(0, 1fr) is essential to stop overflow */
 .monthly-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
-}
-
-@media (max-width: 640px) {
-  .monthly-grid {
-    gap: 4px;
-  }
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .monthly-weekday-label {
@@ -484,6 +485,9 @@ header {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.35rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .monthly-weekday-label.weekend {
   color: var(--accent-gold);
@@ -493,20 +497,16 @@ header {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  min-height: 110px;
-  padding: 6px 4px;
+  min-height: 105px;
+  min-width: 0; /* Prevents cell expansion */
+  padding: 5px 3px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   cursor: pointer;
   transition: all 0.15s ease;
-}
-
-@media (max-width: 640px) {
-  .monthly-day-cell {
-    min-height: 85px;
-    padding: 4px 2px;
-  }
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .monthly-day-cell:hover {
@@ -530,11 +530,11 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2px;
-  padding: 0 2px;
+  padding: 0 1px;
 }
 
 .monthly-day-number {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: var(--text-main);
   line-height: 1;
@@ -544,39 +544,38 @@ header {
   background: var(--primary);
   color: #0f172a;
   border-radius: var(--radius-full);
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
 }
 
 .cal-tabs-wrap {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  margin-top: 3px;
+  gap: 2.5px;
+  margin-top: 2px;
+  width: 100%;
+  min-width: 0;
 }
 
-/* PER-DAY STATUS TABS */
+/* Status Tab Pills */
 .cal-status-tab {
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  padding: 2px 4px;
-  border-radius: 4px;
-  line-height: 1.2;
+  padding: 2px 3px;
+  border-radius: 3px;
+  line-height: 1.15;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-}
-
-@media (max-width: 640px) {
-  .cal-status-tab {
-    font-size: 0.55rem;
-    padding: 1px 2px;
-  }
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .tab-red {
@@ -589,6 +588,70 @@ header {
   background: rgba(16, 185, 129, 0.18);
   color: #6ee7b7;
   border: 1px solid rgba(16, 185, 129, 0.6);
+}
+
+/* Responsive Text Toggling */
+.tab-text-mobile {
+  display: none;
+}
+.tab-text-desktop {
+  display: inline;
+}
+
+/* ====================================================
+   MOBILE-SPECIFIC VIEWPORT ADJUSTMENTS (≤ 768px)
+   ==================================================== */
+@media (max-width: 768px) {
+  .monthly-cal-container {
+    padding: 0.75rem 0.35rem; /* Reclaim horizontal margin */
+  }
+
+  .monthly-cal-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .monthly-cal-nav {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .monthly-cal-select {
+    flex: 1;
+  }
+
+  .monthly-grid {
+    gap: 3px; /* Tighter gap for small screens */
+  }
+
+  .monthly-weekday-label {
+    font-size: 0.65rem;
+    padding: 0.2rem 0;
+  }
+
+  .monthly-day-cell {
+    min-height: 78px;
+    padding: 3px 1.5px;
+  }
+
+  .cal-tabs-wrap {
+    gap: 2px;
+  }
+
+  .cal-status-tab {
+    font-size: 0.54rem;
+    padding: 1.5px 1px;
+    letter-spacing: -0.3px;
+  }
+
+  /* Show abbreviations on mobile, hide full string */
+  .tab-text-mobile {
+    display: inline;
+  }
+  .tab-text-desktop {
+    display: none;
+  }
 }
 
 /* MODAL / DRAWER */
