@@ -336,6 +336,28 @@ function jumpToLiveMonth() {
  * - Parking Area: red-(parking booked / full area booked / first floor booked) / green-vacant
  * - Venue 4, 5, etc.: red-booked / green-vacant
  */
+
+/**
+ * Helper: generates concise abbreviations for dynamic venues
+ */
+function getVenueAbbreviation(name) {
+  if (!name) return "V";
+  const n = name.trim();
+  const nl = n.toLowerCase();
+  if (nl.includes("full") || nl.includes("auditorium")) return "Full";
+  if (nl.includes("first") || nl.includes("top")) return "1st";
+  if (nl.includes("parking")) return "Pkg";
+  
+  const words = n.split(/\s+/);
+  if (words.length > 1) {
+    return words.map(w => w[0]).join("").slice(0, 4).toUpperCase();
+  }
+  return n.slice(0, 4).toUpperCase();
+}
+
+/**
+ * Multi-Venue Status Evaluator (Per-Day Rule Application with Mobile Abbreviations)
+ */
 function evaluateDayStatuses(isoDate) {
   const normTarget = normalizeIsoDate(isoDate);
 
@@ -360,52 +382,67 @@ function evaluateDayStatuses(isoDate) {
   // 1. Full Area
   const fullAreaStatus = {
     isBooked: isFullAreaBooked,
-    label: isFullAreaBooked ? "Full Area: Booked" : "Full Area: Vacant"
+    desktop: isFullAreaBooked ? "Full Area: Booked" : "Full Area: Vacant",
+    mobile: isFullAreaBooked ? "Full: Bk" : "Full: Vac"
   };
 
-  // 2. First Floor: red if full area booked OR first floor booked, else green
-  let firstFloorLabel = "First Floor: Vacant";
-  let firstFloorIsRed = false;
+  // 2. First Floor
+  let ffDesktop = "First Floor: Vacant";
+  let ffMobile = "1st: Vac";
+  let ffIsRed = false;
+
   if (isFullAreaBooked) {
-    firstFloorIsRed = true;
-    firstFloorLabel = "First Floor: Full Area Booked";
+    ffIsRed = true;
+    ffDesktop = "First Floor: Full Area Booked";
+    ffMobile = "1st: Lck";
   } else if (isFirstFloorBooked) {
-    firstFloorIsRed = true;
-    firstFloorLabel = "First Floor: Booked";
+    ffIsRed = true;
+    ffDesktop = "First Floor: Booked";
+    ffMobile = "1st: Bk";
   }
+
   const firstFloorStatus = {
-    isBooked: firstFloorIsRed,
-    label: firstFloorLabel
+    isBooked: ffIsRed,
+    desktop: ffDesktop,
+    mobile: ffMobile
   };
 
-  // 3. Parking Area: red if parking booked OR full area booked OR first floor booked, else green
-  let parkingLabel = "Parking: Vacant";
-  let parkingIsRed = false;
+  // 3. Parking Area
+  let pkgDesktop = "Parking: Vacant";
+  let pkgMobile = "Pkg: Vac";
+  let pkgIsRed = false;
+
   if (isParkingDirectBooked) {
-    parkingIsRed = true;
-    parkingLabel = "Parking: Booked";
+    pkgIsRed = true;
+    pkgDesktop = "Parking: Booked";
+    pkgMobile = "Pkg: Bk";
   } else if (isFullAreaBooked) {
-    parkingIsRed = true;
-    parkingLabel = "Parking: Full Area Booked";
+    pkgIsRed = true;
+    pkgDesktop = "Parking: Full Area Booked";
+    pkgMobile = "Pkg: Lck";
   } else if (isFirstFloorBooked) {
-    parkingIsRed = true;
-    parkingLabel = "Parking: First Floor Booked";
+    pkgIsRed = true;
+    pkgDesktop = "Parking: First Floor Booked";
+    pkgMobile = "Pkg: Lck";
   }
+
   const parkingStatus = {
-    isBooked: parkingIsRed,
-    label: parkingLabel
+    isBooked: pkgIsRed,
+    desktop: pkgDesktop,
+    mobile: pkgMobile
   };
 
-  // 4. Custom Expansion Venues (Venue 4, 5, etc.)
+  // 4. Custom Expansion Venues
   const customVenuesStatus = [];
   (db.spaces || []).forEach(space => {
     if (["SP-MAIN-FULL", "SP-TOP-SOLO", "SP-PARKING-ONLY"].includes(space.space_id)) return;
     const vb = activeBookings.find(b => b.space_id === space.space_id);
     const isBooked = Boolean(vb);
+    const abbr = getVenueAbbreviation(space.name);
     customVenuesStatus.push({
-      name: space.name,
       isBooked: isBooked,
-      label: isBooked ? `${space.name}: Booked` : `${space.name}: Vacant`
+      desktop: isBooked ? `${space.name}: Booked` : `${space.name}: Vacant`,
+      mobile: isBooked ? `${abbr}: Bk` : `${abbr}: Vac`
     });
   });
 
@@ -418,6 +455,9 @@ function evaluateDayStatuses(isoDate) {
   };
 }
 
+/**
+ * Renders the Monthly Calendar Grid with Responsive Text Elements
+ */
 function renderMonthlyCalendar() {
   const grid = document.getElementById("monthlyCalendarGrid");
   const prevBtn = document.getElementById("calPrevMonthBtn");
@@ -437,6 +477,7 @@ function renderMonthlyCalendar() {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const prevMonthLastDate = new Date(year, month, 0).getDate();
 
+  // Trailing previous month padding
   for (let i = firstDayIndex - 1; i >= 0; i--) {
     const prevDateNum = prevMonthLastDate - i;
     const cell = document.createElement("div");
@@ -459,16 +500,41 @@ function renderMonthlyCalendar() {
 
     const st = evaluateDayStatuses(isoDate);
 
+    // Build responsive status tabs with both desktop and mobile spans
     let tabsHtml = "";
-    // Full Area
-    tabsHtml += `<div class="cal-status-tab ${st.fullArea.isBooked ? 'tab-red' : 'tab-green'}">${st.fullArea.isBooked ? '🔴' : '🟢'} ${st.fullArea.label}</div>`;
-    // First Floor
-    tabsHtml += `<div class="cal-status-tab ${st.firstFloor.isBooked ? 'tab-red' : 'tab-green'}">${st.firstFloor.isBooked ? '🔴' : '🟢'} ${st.firstFloor.label}</div>`;
-    // Parking Area
-    tabsHtml += `<div class="cal-status-tab ${st.parking.isBooked ? 'tab-red' : 'tab-green'}">${st.parking.isBooked ? '🔴' : '🟢'} ${st.parking.label}</div>`;
-    // Venue 4, 5, etc.
+
+    // 1. Full Area
+    tabsHtml += `
+      <div class="cal-status-tab ${st.fullArea.isBooked ? 'tab-red' : 'tab-green'}" title="${st.fullArea.desktop}">
+        <span class="tab-text-desktop">${st.fullArea.isBooked ? '🔴' : '🟢'} ${st.fullArea.desktop}</span>
+        <span class="tab-text-mobile">${st.fullArea.isBooked ? '🔴' : '🟢'} ${st.fullArea.mobile}</span>
+      </div>
+    `;
+
+    // 2. First Floor
+    tabsHtml += `
+      <div class="cal-status-tab ${st.firstFloor.isBooked ? 'tab-red' : 'tab-green'}" title="${st.firstFloor.desktop}">
+        <span class="tab-text-desktop">${st.firstFloor.isBooked ? '🔴' : '🟢'} ${st.firstFloor.desktop}</span>
+        <span class="tab-text-mobile">${st.firstFloor.isBooked ? '🔴' : '🟢'} ${st.firstFloor.mobile}</span>
+      </div>
+    `;
+
+    // 3. Parking Area
+    tabsHtml += `
+      <div class="cal-status-tab ${st.parking.isBooked ? 'tab-red' : 'tab-green'}" title="${st.parking.desktop}">
+        <span class="tab-text-desktop">${st.parking.isBooked ? '🔴' : '🟢'} ${st.parking.desktop}</span>
+        <span class="tab-text-mobile">${st.parking.isBooked ? '🔴' : '🟢'} ${st.parking.mobile}</span>
+      </div>
+    `;
+
+    // 4. Custom Venues
     st.customVenues.forEach(cv => {
-      tabsHtml += `<div class="cal-status-tab ${cv.isBooked ? 'tab-red' : 'tab-green'}">${cv.isBooked ? '🔴' : '🟢'} ${cv.label}</div>`;
+      tabsHtml += `
+        <div class="cal-status-tab ${cv.isBooked ? 'tab-red' : 'tab-green'}" title="${cv.desktop}">
+          <span class="tab-text-desktop">${cv.isBooked ? '🔴' : '🟢'} ${cv.desktop}</span>
+          <span class="tab-text-mobile">${cv.isBooked ? '🔴' : '🟢'} ${cv.mobile}</span>
+        </div>
+      `;
     });
 
     cell.innerHTML = `
@@ -489,6 +555,7 @@ function renderMonthlyCalendar() {
     grid.appendChild(cell);
   }
 
+  // Leading next month padding
   const totalRendered = firstDayIndex + daysInMonth;
   const trailingCount = (7 - (totalRendered % 7)) % 7;
   for (let nextDay = 1; nextDay <= trailingCount; nextDay++) {
