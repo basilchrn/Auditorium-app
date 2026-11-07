@@ -13,27 +13,33 @@ let db = {
   bookings: []
 };
 
+//Global Ledger Filter & Year Selection
+let gLedgerFilterMode = 'all'; // 'all' | 'dues'
+let gSelectedLedgerYear = new Date().getFullYear();
+
 // 8-Month Rolling Window Constants
 let gMonthlyOffset = 0; // 0 = Live Month, -1 = Previous Month, +1 to +6 = Future Months
 const MIN_MONTH_OFFSET = -1;
 const MAX_MONTH_OFFSET = 6;
 
 window.addEventListener("DOMContentLoaded", () => {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayIso();
   const mDate = document.getElementById("matrixDate");
   const bDate = document.getElementById("bookStartDate");
+  
   if (mDate) mDate.value = today;
-  if (bDate) bDate.value = today;
+  if (bDate) {
+    bDate.value = today;
+    bDate.min = today; // Prevents selecting past dates in HTML5 datepicker
+  }
 
-  // 1. Load initial cache
   db = DataStore.getLocal();
   populateSpaceDropdown();
+  populateLedgerYearDropdown();
 
-  // 2. Initialize Calendar & Views
   initMonthlyCalendar();
   renderApp();
 
-  // 3. Trigger live sync with Google Sheets
   syncWithSheets(false);
 });
 
@@ -358,6 +364,10 @@ function getVenueAbbreviation(name) {
 /**
  * Multi-Venue Status Evaluator (Per-Day Rule Application with Mobile Abbreviations)
  */
+/**
+ * 2. THREE-TIER STATUS EVALUATION WITH YELLOW HOLDS & ABBREVIATIONS
+ * Red (Confirmed) | Yellow (Tentative Hold) | Green (Vacant)
+ */
 function evaluateDayStatuses(isoDate) {
   const normTarget = normalizeIsoDate(isoDate);
 
@@ -375,88 +385,133 @@ function evaluateDayStatuses(isoDate) {
     Number(b.parking_fee || 0) > 0
   );
 
-  const isFullAreaBooked = Boolean(fullAreaBooking);
-  const isFirstFloorBooked = Boolean(firstFloorBooking);
-  const isParkingDirectBooked = Boolean(parkingBooking);
+  // Status helper: 'confirmed' | 'hold' | 'vacant'
+  function getTier(b) {
+    if (!b) return 'vacant';
+    return (b.status === "Confirmed") ? 'confirmed' : 'hold';
+  }
+
+  const fullTier = getTier(fullAreaBooking);
+  const firstTier = getTier(firstFloorBooking);
+  const parkTier = getTier(parkingBooking);
 
   // 1. Full Area
-  const fullAreaStatus = {
-    isBooked: isFullAreaBooked,
-    desktop: isFullAreaBooked ? "Full Area: Booked" : "Full Area: Vacant",
-    mobile: isFullAreaBooked ? "Full: Bk" : "Full: Vac"
-  };
+  let fullState = 'green';
+  let fullAbbr = 'Full: Vac';
+  let fullTitle = 'Full Area: Vacant';
+
+  if (fullTier === 'confirmed') {
+    fullState = 'red';
+    fullAbbr = 'Full: Bk';
+    fullTitle = 'Full Area: Booked';
+  } else if (fullTier === 'hold') {
+    fullState = 'yellow';
+    fullAbbr = 'Full: Hold';
+    fullTitle = 'Full Area: Tentative Hold';
+  } else if (firstTier === 'confirmed') {
+    fullState = 'red';
+    fullAbbr = 'Full: Lck';
+    fullTitle = 'Full Area: Locked by 1st Floor';
+  } else if (firstTier === 'hold') {
+    fullState = 'yellow';
+    fullAbbr = 'Full: Hold';
+    fullTitle = 'Full Area: Held by 1st Floor';
+  }
 
   // 2. First Floor
-  let ffDesktop = "First Floor: Vacant";
-  let ffMobile = "1st: Vac";
-  let ffIsRed = false;
+  let firstState = 'green';
+  let firstAbbr = '1st: Vac';
+  let firstTitle = 'First Floor: Vacant';
 
-  if (isFullAreaBooked) {
-    ffIsRed = true;
-    ffDesktop = "First Floor: Full Area Booked";
-    ffMobile = "1st: Lck";
-  } else if (isFirstFloorBooked) {
-    ffIsRed = true;
-    ffDesktop = "First Floor: Booked";
-    ffMobile = "1st: Bk";
+  if (firstTier === 'confirmed') {
+    firstState = 'red';
+    firstAbbr = '1st: Bk';
+    firstTitle = 'First Floor: Booked';
+  } else if (firstTier === 'hold') {
+    firstState = 'yellow';
+    firstAbbr = '1st: Hold';
+    firstTitle = 'First Floor: Tentative Hold';
+  } else if (fullTier === 'confirmed') {
+    firstState = 'red';
+    firstAbbr = '1st: Lck';
+    firstTitle = 'First Floor: Full Area Booked';
+  } else if (fullTier === 'hold') {
+    firstState = 'yellow';
+    firstAbbr = '1st: Hold';
+    firstTitle = 'First Floor: Held by Full Area';
   }
-
-  const firstFloorStatus = {
-    isBooked: ffIsRed,
-    desktop: ffDesktop,
-    mobile: ffMobile
-  };
 
   // 3. Parking Area
-  let pkgDesktop = "Parking: Vacant";
-  let pkgMobile = "Pkg: Vac";
-  let pkgIsRed = false;
+  let parkState = 'green';
+  let parkAbbr = 'Pkg: Vac';
+  let parkTitle = 'Parking: Vacant';
 
-  if (isParkingDirectBooked) {
-    pkgIsRed = true;
-    pkgDesktop = "Parking: Booked";
-    pkgMobile = "Pkg: Bk";
-  } else if (isFullAreaBooked) {
-    pkgIsRed = true;
-    pkgDesktop = "Parking: Full Area Booked";
-    pkgMobile = "Pkg: Lck";
-  } else if (isFirstFloorBooked) {
-    pkgIsRed = true;
-    pkgDesktop = "Parking: First Floor Booked";
-    pkgMobile = "Pkg: Lck";
+  if (parkTier === 'confirmed') {
+    parkState = 'red';
+    parkAbbr = 'Pkg: Bk';
+    parkTitle = 'Parking Area: Booked';
+  } else if (parkTier === 'hold') {
+    parkState = 'yellow';
+    parkAbbr = 'Pkg: Hold';
+    parkTitle = 'Parking Area: Tentative Hold';
+  } else if (fullTier === 'confirmed') {
+    parkState = 'red';
+    parkAbbr = 'Pkg: Lck';
+    parkTitle = 'Parking: Full Area Booked';
+  } else if (fullTier === 'hold') {
+    parkState = 'yellow';
+    parkAbbr = 'Pkg: Hold';
+    parkTitle = 'Parking: Held by Full Area';
+  } else if (firstTier === 'confirmed') {
+    parkState = 'red';
+    parkAbbr = 'Pkg: Lck';
+    parkTitle = 'Parking: First Floor Booked';
+  } else if (firstTier === 'hold') {
+    parkState = 'yellow';
+    parkAbbr = 'Pkg: Hold';
+    parkTitle = 'Parking: Held by First Floor';
   }
-
-  const parkingStatus = {
-    isBooked: pkgIsRed,
-    desktop: pkgDesktop,
-    mobile: pkgMobile
-  };
 
   // 4. Custom Expansion Venues
   const customVenuesStatus = [];
   (db.spaces || []).forEach(space => {
     if (["SP-MAIN-FULL", "SP-TOP-SOLO", "SP-PARKING-ONLY"].includes(space.space_id)) return;
     const vb = activeBookings.find(b => b.space_id === space.space_id);
-    const isBooked = Boolean(vb);
-    const abbr = getVenueAbbreviation(space.name);
+    const vTier = getTier(vb);
+    const shortName = space.name.slice(0, 4);
+
+    let vState = 'green';
+    let vAbbr = `${shortName}: Vac`;
+    let vTitle = `${space.name}: Vacant`;
+
+    if (vTier === 'confirmed') {
+      vState = 'red';
+      vAbbr = `${shortName}: Bk`;
+      vTitle = `${space.name}: Booked`;
+    } else if (vTier === 'hold') {
+      vState = 'yellow';
+      vAbbr = `${shortName}: Hold`;
+      vTitle = `${space.name}: Tentative Hold`;
+    }
+
     customVenuesStatus.push({
-      isBooked: isBooked,
-      desktop: isBooked ? `${space.name}: Booked` : `${space.name}: Vacant`,
-      mobile: isBooked ? `${abbr}: Bk` : `${abbr}: Vac`
+      state: vState,
+      abbr: vAbbr,
+      title: vTitle
     });
   });
 
   return {
-    fullArea: fullAreaStatus,
-    firstFloor: firstFloorStatus,
-    parking: parkingStatus,
+    full: { state: fullState, abbr: fullAbbr, title: fullTitle },
+    first: { state: firstState, abbr: firstAbbr, title: firstTitle },
+    park: { state: parkState, abbr: parkAbbr, title: parkTitle },
     customVenues: customVenuesStatus,
     allActive: activeBookings
   };
 }
 
 /**
- * Renders the Monthly Calendar Grid with Responsive Text Elements
+ * Render Monthly Calendar Grid with Click Guard on Past Dates
  */
 function renderMonthlyCalendar() {
   const grid = document.getElementById("monthlyCalendarGrid");
@@ -477,7 +532,7 @@ function renderMonthlyCalendar() {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const prevMonthLastDate = new Date(year, month, 0).getDate();
 
-  // Trailing previous month padding
+  // Previous month trailing cells
   for (let i = firstDayIndex - 1; i >= 0; i--) {
     const prevDateNum = prevMonthLastDate - i;
     const cell = document.createElement("div");
@@ -486,66 +541,52 @@ function renderMonthlyCalendar() {
     grid.appendChild(cell);
   }
 
-  const now = new Date();
-  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const todayIso = getTodayIso();
 
   for (let day = 1; day <= daysInMonth; day++) {
     const mStr = String(month + 1).padStart(2, "0");
     const dStr = String(day).padStart(2, "0");
     const isoDate = `${year}-${mStr}-${dStr}`;
+    const isPast = (isoDate < todayIso);
 
     const cell = document.createElement("div");
     cell.className = "monthly-day-cell";
     if (isoDate === todayIso) cell.classList.add("is-today");
+    if (isPast) cell.classList.add("is-past");
 
     const st = evaluateDayStatuses(isoDate);
 
-    // Build responsive status tabs with both desktop and mobile spans
+    function getClass(state) {
+      if (state === 'red') return 'tab-red';
+      if (state === 'yellow') return 'tab-yellow';
+      return 'tab-green';
+    }
+
     let tabsHtml = "";
-
-    // 1. Full Area
-    tabsHtml += `
-      <div class="cal-status-tab ${st.fullArea.isBooked ? 'tab-red' : 'tab-green'}" title="${st.fullArea.desktop}">
-        <span class="tab-text-desktop">${st.fullArea.isBooked ? '🔴' : '🟢'} ${st.fullArea.desktop}</span>
-        <span class="tab-text-mobile">${st.fullArea.isBooked ? '🔴' : '🟢'} ${st.fullArea.mobile}</span>
-      </div>
-    `;
-
-    // 2. First Floor
-    tabsHtml += `
-      <div class="cal-status-tab ${st.firstFloor.isBooked ? 'tab-red' : 'tab-green'}" title="${st.firstFloor.desktop}">
-        <span class="tab-text-desktop">${st.firstFloor.isBooked ? '🔴' : '🟢'} ${st.firstFloor.desktop}</span>
-        <span class="tab-text-mobile">${st.firstFloor.isBooked ? '🔴' : '🟢'} ${st.firstFloor.mobile}</span>
-      </div>
-    `;
-
-    // 3. Parking Area
-    tabsHtml += `
-      <div class="cal-status-tab ${st.parking.isBooked ? 'tab-red' : 'tab-green'}" title="${st.parking.desktop}">
-        <span class="tab-text-desktop">${st.parking.isBooked ? '🔴' : '🟢'} ${st.parking.desktop}</span>
-        <span class="tab-text-mobile">${st.parking.isBooked ? '🔴' : '🟢'} ${st.parking.mobile}</span>
-      </div>
-    `;
-
-    // 4. Custom Venues
+    tabsHtml += `<div class="cal-status-tab ${getClass(st.full.state)}" title="${st.full.title}">${st.full.abbr}</div>`;
+    tabsHtml += `<div class="cal-status-tab ${getClass(st.first.state)}" title="${st.first.title}">${st.first.abbr}</div>`;
+    tabsHtml += `<div class="cal-status-tab ${getClass(st.park.state)}" title="${st.park.title}">${st.park.abbr}</div>`;
     st.customVenues.forEach(cv => {
-      tabsHtml += `
-        <div class="cal-status-tab ${cv.isBooked ? 'tab-red' : 'tab-green'}" title="${cv.desktop}">
-          <span class="tab-text-desktop">${cv.isBooked ? '🔴' : '🟢'} ${cv.desktop}</span>
-          <span class="tab-text-mobile">${cv.isBooked ? '🔴' : '🟢'} ${cv.mobile}</span>
-        </div>
-      `;
+      tabsHtml += `<div class="cal-status-tab ${getClass(cv.state)}" title="${cv.title}">${cv.abbr}</div>`;
     });
 
     cell.innerHTML = `
-      <div class="monthly-day-header"><span class="monthly-day-number">${day}</span></div>
+      <div class="monthly-day-header">
+        <span class="monthly-day-number">${day}</span>
+        ${isPast ? '<span class="past-badge">Past</span>' : ''}
+      </div>
       <div class="cal-tabs-wrap">${tabsHtml}</div>
     `;
 
+    // Click behavior: block past dates from opening booking modal
     cell.addEventListener("click", () => {
       if (st.allActive.length > 0 && currentRole !== 'customer') {
         inspectBooking(st.allActive[0].booking_id);
       } else {
+        if (isPast) {
+          showToast("Bookings cannot be scheduled for past dates.");
+          return;
+        }
         const bStart = document.getElementById("bookStartDate");
         if (bStart) bStart.value = isoDate;
         openNewBookingModal();
@@ -555,7 +596,7 @@ function renderMonthlyCalendar() {
     grid.appendChild(cell);
   }
 
-  // Leading next month padding
+  // Next month leading cells
   const totalRendered = firstDayIndex + daysInMonth;
   const trailingCount = (7 - (totalRendered % 7)) % 7;
   for (let nextDay = 1; nextDay <= trailingCount; nextDay++) {
@@ -570,15 +611,38 @@ function renderBookingsTable() {
   const tbody = document.getElementById("bookingsTableBody");
   if (!tbody) return;
 
-  if (!db.bookings || db.bookings.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No reservations recorded in sheet ledger.</td></tr>`;
+  renderLedgerHeroStats();
+
+  let list = [ ...(db.bookings || []) ];
+
+  // Filter cancelled
+  list = list.filter(b => String(b.status).toLowerCase() !== "cancelled");
+
+  // Sort strictly in reverse chronological order (latest on top)
+  list.sort((a, b) => {
+    const dateA = (a.created_at || (a.dates && a.dates[0]) || "");
+    const dateB = (b.created_at || (b.dates && b.dates[0]) || "");
+    return dateB.localeCompare(dateA);
+  });
+
+  // Apply Dues Toggle
+  if (gLedgerFilterMode === 'dues') {
+    list = list.filter(b => {
+      const due = Math.max(0, Number(b.grand_total || 0) - Number(b.advance_paid || 0));
+      return due > 0;
+    });
+  }
+
+  if (list.length === 0) {
+    const emptyMsg = gLedgerFilterMode === 'dues' ? "No pending dues found." : "No reservations recorded in sheet ledger.";
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-muted);">${emptyMsg}</td></tr>`;
     return;
   }
 
-  tbody.innerHTML = db.bookings.map(b => {
+  tbody.innerHTML = list.map(b => {
     const space = db.spaces.find(s => s.space_id === b.space_id);
     const due = Math.max(0, Number(b.grand_total) - Number(b.advance_paid));
-    const isHold = b.status === "Tentative_Hold";
+    const isHold = (b.status === "Tentative_Hold");
 
     return `
       <tr>
@@ -589,12 +653,12 @@ function renderBookingsTable() {
           <div style="font-size:0.68rem; color:var(--text-muted);">${b.tenant_phone}</div>
         </td>
         <td>
-          <div style="font-size:0.72rem;">${b.dates.join(", ")}</div>
-          <div style="font-size:0.65rem; color:var(--primary); font-weight:700;">${b.slot_package_name || b.slots.join("+")}</div>
+          <div style="font-size:0.72rem;">${(b.dates || []).join(", ")}</div>
+          <div style="font-size:0.65rem; color:var(--primary); font-weight:700;">${b.slot_package_name || (b.slots || []).join("+")}</div>
         </td>
         <td>
           <span style="font-size:0.65rem; font-weight:800; padding:2px 6px; border-radius:4px; background:${isHold ? 'var(--hold-bg)' : 'var(--success-bg)'}; color:${isHold ? 'var(--hold)' : 'var(--success)'};">
-            ${b.status}
+            ${isHold ? 'Tentative Hold' : 'Confirmed'}
           </span>
         </td>
         <td style="font-weight:700;">₹${Number(b.grand_total).toLocaleString()}</td>
@@ -1154,4 +1218,95 @@ function showToast(msg) {
   toast.innerText = msg;
   toast.style.display = "block";
   setTimeout(() => { toast.style.display = "none"; }, 3000);
+}
+
+function getTodayIso() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
+function validateNoPastDates(datesArray) {
+  const today = getTodayIso();
+  return datesArray.every(d => normalizeIsoDate(d) >= today);
+}
+
+/**
+ * 3. CHRONOLOGICAL LEDGER (LATEST ON TOP) & DUES TOGGLE
+ */
+function setLedgerFilter(mode) {
+  gLedgerFilterMode = mode;
+  document.getElementById("btnFilterAll").classList.toggle("active", mode === 'all');
+  document.getElementById("btnFilterDues").classList.toggle("active", mode === 'dues');
+  renderBookingsTable();
+}
+
+/**
+ * 4. GREGORIAN ANNUAL HERO TAB CALCULATION
+ */
+function populateLedgerYearDropdown() {
+  const sel = document.getElementById("ledgerYearSelect");
+  if (!sel) return;
+
+  const currentYear = new Date().getFullYear();
+  sel.innerHTML = "";
+  for (let yr = currentYear - 1; yr <= currentYear + 2; yr++) {
+    const opt = document.createElement("option");
+    opt.value = yr;
+    opt.text = `${yr}`;
+    if (yr === gSelectedLedgerYear) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function onLedgerYearChange(yr) {
+  gSelectedLedgerYear = parseInt(yr, 10);
+  renderLedgerHeroStats();
+}
+
+function renderLedgerHeroStats() {
+  const revEl = document.getElementById("heroYearRevenue");
+  const duesEl = document.getElementById("heroYearDues");
+  const listEl = document.getElementById("heroVenueBreakdownList");
+  if (!revEl || !duesEl || !listEl) return;
+
+  const targetYearStr = String(gSelectedLedgerYear);
+
+  // Filter bookings belonging to this Gregorian year
+  const yearBookings = (db.bookings || []).filter(b => {
+    if (String(b.status).toLowerCase() === "cancelled") return false;
+    const firstDate = (b.dates && b.dates[0]) ? normalizeIsoDate(b.dates[0]) : "";
+    return firstDate.startsWith(targetYearStr);
+  });
+
+  let totalRev = 0;
+  let totalDues = 0;
+  const eventsCountBySpace = {};
+
+  // Initialize all configured spaces with 0
+  (db.spaces || []).forEach(s => {
+    eventsCountBySpace[s.space_id] = { name: s.name, count: 0 };
+  });
+
+  yearBookings.forEach(b => {
+    const adv = Number(b.advance_paid || 0);
+    const grand = Number(b.grand_total || 0);
+    const due = Math.max(0, grand - adv);
+
+    totalRev += adv;
+    totalDues += due;
+
+    if (eventsCountBySpace[b.space_id]) {
+      eventsCountBySpace[b.space_id].count++;
+    }
+  });
+
+  revEl.innerText = `₹${totalRev.toLocaleString()}`;
+  duesEl.innerText = `₹${totalDues.toLocaleString()}`;
+
+  listEl.innerHTML = Object.values(eventsCountBySpace).map(item => `
+    <div class="venue-breakdown-row">
+      <span>${item.name}:</span>
+      <strong>${item.count} Event(s)</strong>
+    </div>
+  `).join("");
 }
