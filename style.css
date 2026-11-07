@@ -28,6 +28,7 @@
   --hold: #f59e0b;
   --hold-bg: rgba(245, 158, 11, 0.18);
 
+  /* System Font Stack with Apple & Android/Roboto priority */
   --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
   
   --radius-sm: 6px;
@@ -41,6 +42,7 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.65), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
 
+  /* Safe Area Variables */
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
@@ -54,7 +56,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; /* Disable Android/iOS gray tap box */
 }
 
 html {
@@ -69,28 +71,32 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100dvh; /* Dynamic viewport height for iOS Safari & Android Chrome address bars */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
-  user-select: none;
+  user-select: none; /* Prevent accidental text highlighting during touch tap on mobile */
   
+  /* Mobile padding to clear fixed bottom navigation bar + home indicator */
   padding-bottom: calc(5.25rem + var(--sab));
   padding-left: var(--sal);
   padding-right: var(--sar);
 }
 
+/* Allow text selection inside inputs, code, summaries, and table data */
 input, textarea, select, table, pre, code {
   user-select: text;
 }
 
+/* iOS Safari auto-zoom prevention: inputs MUST be >= 16px on mobile viewports */
 @media screen and (max-width: 768px) {
   input, select, textarea {
     font-size: 16px !important;
   }
 }
 
+/* Desktop layout: Remove bottom bar padding on desktop/tablets */
 @media (min-width: 769px) {
   body {
     padding-bottom: 2.5rem;
@@ -98,6 +104,7 @@ input, textarea, select, table, pre, code {
   }
 }
 
+/* Custom sleek scrollbars for Chromium, Android & Desktop */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -113,6 +120,7 @@ input, textarea, select, table, pre, code {
   background: var(--text-dim);
 }
 
+/* Container */
 .container {
   width: 100%;
   max-width: 1240px;
@@ -127,12 +135,12 @@ input, textarea, select, table, pre, code {
 }
 
 /* --------------------------------------------------------------------------
-   3. Header & Navigation
+   3. Header & Navigation (iOS Notch & Dynamic Island Support)
    -------------------------------------------------------------------------- */
 header {
   background-color: rgba(30, 41, 59, 0.88);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); /* Safari support */
   border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
@@ -170,6 +178,7 @@ header {
   letter-spacing: 0.05em;
 }
 
+/* Role Segmented Switcher (iOS Segmented Control Feel) */
 .role-switcher {
   display: inline-flex;
   background: var(--bg-card-subtle);
@@ -204,7 +213,7 @@ header {
 }
 
 /* --------------------------------------------------------------------------
-   4. Buttons & Touch Ergonomics
+   4. Buttons & Touch Target Ergonomics (Min 44px on Mobile)
    -------------------------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -219,16 +228,18 @@ header {
   cursor: pointer;
   transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
   text-decoration: none;
-  min-height: 44px;
+  min-height: 44px; /* Apple Human Interface Guideline minimum touch target */
   touch-action: manipulation;
   -webkit-appearance: none;
 }
 
+/* Touch feedback for mobile */
 .btn:active {
   transform: scale(0.97);
   opacity: 0.92;
 }
 
+/* Hover feedback only on desktop/devices with true hover (prevents sticky hover on touch) */
 @media (hover: hover) and (pointer: fine) {
   .btn:hover {
     transform: translateY(-1px);
@@ -443,7 +454,7 @@ header {
   border-spacing: 0.5rem;
   margin-top: 0.5rem;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; /* iOS momentum touch scroll */
   display: block;
 }
 
@@ -673,6 +684,7 @@ header {
   color: var(--accent-gold);
 }
 
+/* Day cell card */
 .monthly-day-cell {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
@@ -751,6 +763,7 @@ header {
   margin-top: 3px;
 }
 
+/* Day cell status pills */
 .cal-status-tab {
   font-size: 0.63rem;
   font-weight: 700;
@@ -784,11 +797,11 @@ header {
 }
 
 /* --------------------------------------------------------------------------
-   10. Transaction Ledger Table
+   10. Transaction Ledger Table (Momentum Touch Scroll on Mobile)
    -------------------------------------------------------------------------- */
 .table-responsive {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS Safari */
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
@@ -828,10 +841,10 @@ tr:last-child td { border-bottom: none; }
   inset: 0;
   background: rgba(15, 23, 42, 0.75);
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px); /* Safari support */
   z-index: 100;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-end; /* Slides up as native bottom sheet on phones */
   justify-content: center;
   opacity: 0;
   pointer-events: none;
@@ -862,6 +875,7 @@ tr:last-child td { border-bottom: none; }
   box-shadow: var(--shadow-xl);
 }
 
+/* Desktop & iPad landscape: Centered floating card */
 @media (min-width: 768px) {
   .modal-overlay {
     align-items: center;
@@ -927,7 +941,7 @@ tr:last-child td { border-bottom: none; }
 }
 
 /* --------------------------------------------------------------------------
-   12. Form Controls & Inputs
+   12. Form Controls & Inputs (iOS/Android Native Touch Fields)
    -------------------------------------------------------------------------- */
 .form-section {
   background: var(--bg-main);
@@ -983,7 +997,7 @@ input, select, textarea {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
-  min-height: 42px;
+  min-height: 42px; /* iOS/Android ergonomic tap target */
   -webkit-appearance: none;
 }
 
@@ -1083,7 +1097,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 
 /* --------------------------------------------------------------------------
-   13. Mobile Bottom Navigation Bar (Hidden on Desktop >=769px)
+   13. Mobile Bottom Navigation Bar (Hidden on Desktop)
    -------------------------------------------------------------------------- */
 .mobile-nav {
   position: fixed;
@@ -1115,7 +1129,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   font-size: 0.65rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 48px;
+  min-height: 48px; /* Touch target */
   min-width: 48px;
   padding: 0.25rem 0.5rem;
   touch-action: manipulation;
@@ -1135,6 +1149,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   line-height: 1;
 }
 
+/* Hide mobile bottom navigation bar on desktop screens (>=769px) */
 @media (min-width: 769px) {
   .mobile-nav {
     display: none;
