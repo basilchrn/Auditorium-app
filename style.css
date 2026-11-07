@@ -922,3 +922,162 @@ tr:last-child td { border-bottom: none; }
   display: none;
   z-index: 60;
 }
+
+/* ====================================================
+   STATUS TABS: RED (BOOKED), YELLOW (HOLD), GREEN (VACANT)
+   ==================================================== */
+.cal-status-tab {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1.5px 3px;
+  border-radius: 3px;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .cal-status-tab {
+    font-size: 0.55rem;
+    padding: 1px 2px;
+    letter-spacing: -0.2px;
+  }
+}
+
+.tab-red {
+  background: rgba(239, 68, 68, 0.22);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.6);
+}
+
+.tab-yellow {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.7);
+}
+
+.tab-green {
+  background: rgba(16, 185, 129, 0.18);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+}
+
+/* Past Date Marker on Calendar */
+.monthly-day-cell.is-past {
+  opacity: 0.65;
+}
+.monthly-day-cell.is-past:hover {
+  border-color: var(--border-color);
+  transform: none;
+}
+.past-badge {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* ====================================================
+   LEDGER HERO TAB & FILTER TOGGLE
+   ==================================================== */
+.ledger-hero-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.ledger-hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ledger-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .ledger-hero-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.hero-metric-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+}
+
+.hero-metric-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.hero-metric-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-top: 0.2rem;
+}
+
+.venue-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.venue-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+}
+
+.venue-breakdown-row strong {
+  color: var(--text-main);
+}
+
+/* Toggle Pill for Dues vs All */
+.ledger-filter-pill-wrap {
+  display: inline-flex;
+  background: var(--bg-card-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px;
+  border: 1px solid var(--border-color);
+}
+
+.ledger-filter-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ledger-filter-btn.active {
+  background: var(--primary);
+  color: #0f172a;
+}
