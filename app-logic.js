@@ -1,8 +1,8 @@
 /**
  * ==============================================================================
  * app-logic.js
- * Application logic, dynamic pricing engine, UI renderers, and the
- * 8-Month Multi-Venue Calendar controller implementing all exact daily status rules.
+ * Application controller, state management, dynamic pricing calculator,
+ * and the 8-Month Multi-Venue Calendar controller.
  * ==============================================================================
  */
 
@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
   initMonthlyCalendar();
   renderApp();
 
-  // 3. Trigger live sync
+  // 3. Trigger live sync with Google Sheets
   syncWithSheets(false);
 });
 
@@ -330,7 +330,7 @@ function jumpToLiveMonth() {
 }
 
 /**
- * Multi-Venue Status Evaluator (Per-Day Exact Rule Application)
+ * Multi-Venue Status Evaluator (Per-Day Rule Application)
  * - Full Area: red-booked / green-vacant
  * - First Floor: red-(full area booked / first floor booked) / green-vacant
  * - Parking Area: red-(parking booked / full area booked / first floor booked) / green-vacant
@@ -357,7 +357,7 @@ function evaluateDayStatuses(isoDate) {
   const isFirstFloorBooked = Boolean(firstFloorBooking);
   const isParkingDirectBooked = Boolean(parkingBooking);
 
-  // 1. Full Area: red-booked / green-vacant
+  // 1. Full Area
   const fullAreaStatus = {
     isBooked: isFullAreaBooked,
     label: isFullAreaBooked ? "Full Area: Booked" : "Full Area: Vacant"
@@ -396,7 +396,7 @@ function evaluateDayStatuses(isoDate) {
     label: parkingLabel
   };
 
-  // 4. Custom Expansion Venues (Venue 4, 5, etc.): red-booked / green-vacant
+  // 4. Custom Expansion Venues (Venue 4, 5, etc.)
   const customVenuesStatus = [];
   (db.spaces || []).forEach(space => {
     if (["SP-MAIN-FULL", "SP-TOP-SOLO", "SP-PARKING-ONLY"].includes(space.space_id)) return;
