@@ -123,11 +123,11 @@
         </div>
 
         <div class="monthly-cal-nav">
+          <select id="monthlyCalSelect" class="monthly-cal-select" onchange="onMonthlySelectChange(this.value)"></select>
+
           <button type="button" class="btn btn-outline btn-sm" id="calPrevMonthBtn" onclick="changeMonthlyCalOffset(-1)" title="Previous Month">
             ‹ Prev
           </button>
-          
-          <select id="monthlyCalSelect" class="monthly-cal-select" onchange="onMonthlySelectChange(this.value)"></select>
 
           <button type="button" class="btn btn-outline btn-sm" onclick="jumpToLiveMonth()" title="Jump to Current Month">
             Today
