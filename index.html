@@ -7,12 +7,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f172a">
   <title>Auditorium & Multi-Space Management System</title>
-  <!-- STANDALONE SYSTEM STYLESHEET (ZERO EXTERNAL CDNS) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- NOTIFICATION BANNER -->
+  <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast-banner">Notification message</div>
 
   <!-- HEADER -->
@@ -41,10 +40,10 @@
     </div>
   </header>
 
-  <!-- MAIN VIEWPORT -->
+  <!-- MAIN CONTAINER -->
   <main class="container">
     
-    <!-- SYNC & CONNECTION STATUS BAR -->
+    <!-- SYNC STATUS BAR -->
     <div class="sync-bar">
       <div class="sync-status">
         <span class="sync-dot" id="syncDot"></span>
@@ -53,7 +52,7 @@
       <div style="font-size: 0.7rem; color: var(--text-dim);" id="syncTimestamp">--</div>
     </div>
 
-    <!-- KPI STATS BANNER (Admin & Desk) -->
+    <!-- KPI STATS -->
     <div class="kpi-grid" id="kpiSection">
       <div class="kpi-card">
         <div class="kpi-label">Active Spaces</div>
@@ -73,7 +72,7 @@
       </div>
     </div>
 
-    <!-- CALENDAR & SLOT MATRIX SECTION -->
+    <!-- SLOT MATRIX SECTION -->
     <section class="calendar-container" id="calendarSection">
       <div class="cal-controls">
         <div class="cal-date-picker-wrap">
@@ -93,12 +92,10 @@
         <span style="font-size:0.75rem; color:var(--text-muted);">Morning (10-16h) & Evening (17-22h)</span>
       </div>
 
-      <div class="matrix-table" id="matrixGrid">
-        <!-- Injected via app-logic.js -->
-      </div>
+      <div class="matrix-table" id="matrixGrid"></div>
     </section>
 
-    <!-- SPACES & VENUES REPOSITORY -->
+    <!-- SPACES & VENUES SECTION -->
     <section style="margin-bottom: 2rem;" id="spacesSection">
       <div class="section-title">
         <div>
@@ -110,9 +107,7 @@
         </button>
       </div>
 
-      <div class="spaces-grid" id="spacesGrid">
-        <!-- Injected via app-logic.js -->
-      </div>
+      <div class="spaces-grid" id="spacesGrid"></div>
     </section>
 
     <!-- MONTHLY CALENDAR TAB (AFTER VENUE TAB) -->
@@ -132,9 +127,7 @@
             ‹ Prev
           </button>
           
-          <select id="monthlyCalSelect" class="monthly-cal-select" onchange="onMonthlySelectChange(this.value)">
-            <!-- Populated dynamically with 8 months: Month -1 to +6 -->
-          </select>
+          <select id="monthlyCalSelect" class="monthly-cal-select" onchange="onMonthlySelectChange(this.value)"></select>
 
           <button type="button" class="btn btn-outline btn-sm" onclick="jumpToLiveMonth()" title="Jump to Current Month">
             Today
@@ -148,15 +141,11 @@
 
       <!-- Color Legend Bar -->
       <div class="monthly-cal-legend">
-        <span class="monthly-legend-pill tab-green">
-          <span>🟢 Vacant</span>
-        </span>
-        <span class="monthly-legend-pill tab-red">
-          <span>🔴 Booked / Locked</span>
-        </span>
+        <span class="monthly-legend-pill tab-green"><span>🟢 Vacant</span></span>
+        <span class="monthly-legend-pill tab-red"><span>🔴 Booked / Locked</span></span>
       </div>
 
-      <!-- Weekdays Header (Sun - Sat) -->
+      <!-- Weekdays Header -->
       <div class="monthly-grid" style="margin-top: 1rem; margin-bottom: 0.4rem;">
         <div class="monthly-weekday-label weekend">Sun</div>
         <div class="monthly-weekday-label">Mon</div>
@@ -195,9 +184,7 @@
               <th style="text-align: right;">Actions</th>
             </tr>
           </thead>
-          <tbody id="bookingsTableBody">
-            <!-- Injected via app-logic.js -->
-          </tbody>
+          <tbody id="bookingsTableBody"></tbody>
         </table>
       </div>
     </section>
@@ -241,13 +228,9 @@
       </div>
 
       <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
-        
-        <!-- STEP 1: Space & Slot Selection -->
+        <!-- Step 1: Space & Slot -->
         <div class="form-section">
-          <div class="form-section-title">
-            <span>1. Space & Slot Allocation</span>
-          </div>
-
+          <div class="form-section-title"><span>1. Space & Slot Allocation</span></div>
           <div class="form-row form-row-2">
             <div class="form-group">
               <label for="bookSpaceSelect">Select Space</label>
@@ -255,12 +238,9 @@
             </div>
             <div class="form-group">
               <label for="bookPackageSelect">Slot Package</label>
-              <select id="bookPackageSelect" onchange="onSlotPackageChange()" required>
-                <!-- Populated dynamically based on space rules -->
-              </select>
+              <select id="bookPackageSelect" onchange="onSlotPackageChange()" required></select>
             </div>
           </div>
-
           <div class="form-row form-row-2">
             <div class="form-group">
               <label for="bookStartDate">Start Date</label>
@@ -271,17 +251,14 @@
               <input type="number" id="bookGuestPax" min="1" value="100" oninput="recalcLedger()" required>
             </div>
           </div>
-          
           <div id="paxSurchargeNotice" style="display:none; font-size:0.7rem; color:var(--accent-gold); margin-top:2px;">
             ⚠️ Exceeds space capacity. Surcharge of ₹200/extra pax applied.
           </div>
         </div>
 
-        <!-- STEP 2: Add-Ons (Parking, Waste Disposal, Caution & Tax) -->
+        <!-- Step 2: Add-Ons -->
         <div class="form-section">
           <div class="form-section-title">2. Add-Ons & Statutory Controls</div>
-          
-          <!-- Parking Area -->
           <div class="toggle-row">
             <div>
               <label style="color:var(--text-main);">Parking Area Reservation</label>
@@ -292,13 +269,10 @@
               <span class="slider"></span>
             </label>
           </div>
-
           <div id="parkingInputWrap" style="display:none; margin:0.5rem 0;" class="form-group">
             <label for="parkingSqft">Parking Area in SqFt</label>
             <input type="number" id="parkingSqft" placeholder="e.g. 50" min="0" oninput="recalcLedger()">
           </div>
-
-          <!-- Waste Disposal Toggle -->
           <div class="toggle-row">
             <div>
               <label style="color:var(--text-main);">Waste Disposal Fee (+₹1,000)</label>
@@ -309,8 +283,6 @@
               <span class="slider"></span>
             </label>
           </div>
-
-          <!-- Caution Deposit Toggle -->
           <div class="toggle-row">
             <div>
               <label style="color:var(--text-main);">Refundable Caution Deposit (₹10,000)</label>
@@ -321,8 +293,6 @@
               <span class="slider"></span>
             </label>
           </div>
-
-          <!-- GST Toggle -->
           <div class="toggle-row">
             <div>
               <label style="color:var(--text-main);">Include GST (18%)</label>
@@ -335,10 +305,9 @@
           </div>
         </div>
 
-        <!-- STEP 3: Tenant KYC & Physical ID Upload -->
+        <!-- Step 3: Tenant Demographics & ID -->
         <div class="form-section">
           <div class="form-section-title">3. Tenant Demographics & ID Proof</div>
-          
           <div class="form-row form-row-2">
             <div class="form-group">
               <label for="tName">Full Name *</label>
@@ -349,7 +318,6 @@
               <input type="tel" id="tPhone" placeholder="10-digit mobile" required>
             </div>
           </div>
-
           <div class="form-row form-row-2">
             <div class="form-group">
               <label for="tAltPhone">Alternate Phone</label>
@@ -367,7 +335,6 @@
               </select>
             </div>
           </div>
-
           <div class="form-row form-row-2">
             <div class="form-group">
               <label for="tOrg">Organization / Company</label>
@@ -378,19 +345,16 @@
               <input type="text" id="tSuggestedBy" placeholder="Staff or referral name">
             </div>
           </div>
-
           <div class="form-group" style="margin-bottom:0.65rem;">
             <label for="tRemarks">Special Remarks</label>
-            <input type="text" id="tRemarks" placeholder="Stage requirements, sound check, generator...">
+            <input type="text" id="tRemarks" placeholder="Stage requirements, generator, etc.">
           </div>
-
-          <!-- Mandatory ID Upload with Offline Generator -->
           <div class="id-proof-card">
             <label style="color:var(--text-main); font-weight:700; display:block; margin-bottom:0.25rem;">
               Mandatory Govt ID Proof *
             </label>
             <p style="font-size:0.65rem; color:var(--text-muted); margin-bottom:0.5rem;">
-              Capture photo or upload valid physical ID (Voter/DL/Passport)
+              Capture photo or upload physical ID (Voter/DL/Passport)
             </p>
             <div style="display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
               <input type="file" id="idProofFile" accept="image/*" capture="environment" onchange="handleIdProofFile(event)">
@@ -403,10 +367,9 @@
           </div>
         </div>
 
-        <!-- STEP 4: Payment Logging & Financial Summary -->
+        <!-- Step 4: Financial Summary -->
         <div class="form-section">
           <div class="form-section-title">4. Financial Breakdown & Token Advance</div>
-
           <div class="ledger-box">
             <div class="ledger-line"><span>Venue Base Charge:</span><b id="leadVenueBase">₹0</b></div>
             <div class="ledger-line" id="lineExtraPax" style="display:none; color:var(--accent-gold);"><span>Extra Pax Surcharge:</span><b id="leadExtraPax">₹0</b></div>
@@ -417,7 +380,6 @@
             <div class="ledger-line total"><span>Grand Total:</span><span id="leadGrandTotal" style="color:var(--primary);">₹0</span></div>
             <div class="ledger-line advance"><span>Advance Required (<span id="leadAdvancePct">50</span>%):</span><span id="leadAdvanceReq">₹0</span></div>
           </div>
-
           <div class="form-row form-row-2" style="margin-top:0.75rem;">
             <div class="form-group">
               <label for="payMode">Payment Mode</label>
@@ -431,8 +393,6 @@
               <input type="number" id="payAmount" min="0" placeholder="0" required>
             </div>
           </div>
-
-          <!-- UPI Details -->
           <div id="upiFields" class="form-row form-row-2">
             <div class="form-group">
               <label for="upiPayerName">UPI Payer Name</label>
@@ -447,8 +407,6 @@
               <input type="text" id="upiUtr" placeholder="12-digit Bank Reference">
             </div>
           </div>
-
-          <!-- Booking Hold Option -->
           <div class="form-group" style="margin-top:0.5rem;">
             <label for="bookStatusSelect">Booking Status</label>
             <select id="bookStatusSelect">
@@ -465,7 +423,7 @@
     </div>
   </div>
 
-  <!-- MODAL: ADD NEW VENUE / EXPANSION -->
+  <!-- MODAL: ADD NEW VENUE -->
   <div id="addSpaceModal" class="modal-overlay">
     <div class="modal-sheet">
       <div class="sheet-handle"></div>
@@ -483,7 +441,6 @@
             <label for="newSpaceName">Venue Name *</label>
             <input type="text" id="newSpaceName" placeholder="e.g. Open Lawn / Rooftop Banquet" required>
           </div>
-
           <div class="form-row form-row-2">
             <div class="form-group">
               <label for="newSpaceCapacity">Guest Capacity (Pax) *</label>
@@ -494,27 +451,24 @@
               <input type="number" id="newSpaceRate" min="500" placeholder="e.g. 12000" required>
             </div>
           </div>
-
           <div class="form-group" style="margin-bottom:0.65rem;">
             <label for="newSpaceConflictGroup">Conflict Group ID *</label>
             <input type="text" id="newSpaceConflictGroup" placeholder="e.g. GRP_OPEN_LAWN" required>
             <span style="font-size:0.65rem; color:var(--text-muted);">
-              Use <b>GRP_MAIN_AUDITORIUM</b> if it cannot run when the main auditorium runs. Use a new ID (e.g., GRP_LAWN) if independent.
+              Use <b>GRP_MAIN_AUDITORIUM</b> if it shares the sound zone. Use a new ID (e.g., GRP_LAWN) if independent.
             </span>
           </div>
-
           <div class="form-group">
             <label for="newSpaceDesc">Description & Highlights</label>
             <input type="text" id="newSpaceDesc" placeholder="e.g. Independent entrance, acoustic soundproof setup">
           </div>
         </div>
-
         <button type="submit" id="submitSpaceBtn" class="btn btn-primary" style="width:100%;">Create Space & Save to Sheet</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: TENANT INSPECTION & SETTLEMENT DRAWER -->
+  <!-- MODAL: TENANT INSPECTION & SETTLEMENT -->
   <div id="tenantInspectModal" class="modal-overlay">
     <div class="modal-sheet">
       <div class="sheet-handle"></div>
@@ -525,14 +479,11 @@
         </div>
         <button type="button" class="close-btn" onclick="closeModal('tenantInspectModal')">&times;</button>
       </div>
-
-      <div id="inspectBody">
-        <!-- Rendered dynamically -->
-      </div>
+      <div id="inspectBody"></div>
     </div>
   </div>
 
-  <!-- APPLICATION SCRIPTS -->
+  <!-- SCRIPT ORDER: Data Layer FIRST, Application Logic SECOND -->
   <script src="data-sync.js"></script>
   <script src="app-logic.js"></script>
 </body>
