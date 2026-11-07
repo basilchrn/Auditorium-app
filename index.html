@@ -160,12 +160,71 @@
       <div class="monthly-grid" id="monthlyCalendarGrid"></div>
     </section>
 
-    <!-- BOOKINGS & TRANSACTION LEDGER -->
+<!-- BOOKINGS & TRANSACTION LEDGER -->
     <section class="calendar-container" id="ledgerSection">
-      <div class="section-title">
+      
+      <!-- LEDGER ANNUAL HERO TAB -->
+      <div class="ledger-hero-card">
+        <div class="ledger-hero-header">
+          <div>
+            <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">
+              Gregorian Annual Summary
+            </span>
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-top: 2px;">
+              Annual Performance & Dues Tracker
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <label for="ledgerYearSelect" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">Year:</label>
+            <select id="ledgerYearSelect" class="monthly-cal-select" onchange="onLedgerYearChange(this.value)">
+              <!-- Populated dynamically via app-logic.js (e.g. 2025, 2026, 2027) -->
+            </select>
+          </div>
+        </div>
+
+        <div class="ledger-hero-grid">
+          <!-- Total Revenue Collected in Year -->
+          <div class="hero-metric-box">
+            <div class="hero-metric-label">Total Revenue Collected</div>
+            <div class="hero-metric-value" style="color: var(--success);" id="heroYearRevenue">₹0</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Advance + Balance Settle</div>
+          </div>
+
+          <!-- Total Dues in Year -->
+          <div class="hero-metric-box">
+            <div class="hero-metric-label">Total Outstanding Dues</div>
+            <div class="hero-metric-value" style="color: var(--accent-gold);" id="heroYearDues">₹0</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Receivables pending</div>
+          </div>
+
+          <!-- Total Events Held Per Venue -->
+          <div class="hero-metric-box" style="grid-column: 1 / -1;" id="venueBreakdownContainer">
+            <div class="hero-metric-label">Events Held Per Venue</div>
+            <div id="heroVenueBreakdownList" class="venue-breakdown-list">
+              <!-- Rendered via app-logic.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEDGER CONTROLS & FILTER TOGGLE -->
+      <div class="section-title" style="flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
         <div>
           <h2>Bookings & Payment Audit Ledger</h2>
-          <p style="font-size:0.72rem; color:var(--text-muted);">Track customer KYC, advance tokens, cash/UPI UTR numbers, and hold expirations.</p>
+          <p style="font-size:0.72rem; color:var(--text-muted);">
+            Sorted in chronological order with latest records on top
+          </p>
+        </div>
+
+        <!-- DUES VS ALL TOGGLE -->
+        <div class="ledger-filter-pill-wrap">
+          <button type="button" class="ledger-filter-btn active" id="btnFilterAll" onclick="setLedgerFilter('all')">
+            All Bookings
+          </button>
+          <button type="button" class="ledger-filter-btn" id="btnFilterDues" onclick="setLedgerFilter('dues')">
+            Dues Only
+          </button>
         </div>
       </div>
 
@@ -188,7 +247,7 @@
         </table>
       </div>
     </section>
-
+    
   </main>
 
   <!-- MOBILE BOTTOM BAR -->
